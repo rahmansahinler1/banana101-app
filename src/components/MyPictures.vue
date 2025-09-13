@@ -66,4 +66,18 @@
   </div>
 </template>
 
-<script></script>
+<script>
+import { healthCheck } from '@/api/api'
+
+export default {
+  name: 'MyPictures',
+  async mounted() {
+    try {
+      const result = await healthCheck()
+      console.log('Success, API service working ✅', result)
+    } catch (error) {
+      console.log(error)
+    }
+  },
+}
+</script>
