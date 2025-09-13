@@ -1,8 +1,8 @@
 <template>
-  <!-- My Wardrobe Page -->
-  <div id="my-wardrobe" class="page-content active">
+  <!-- My Pictures Page -->
+  <div id="my-pictures" class="page-content active">
     <div class="container-fluid">
-      <h1 class="dashboard-title mb-3">My Wardrobe</h1>
+      <h1 class="dashboard-title mb-3">Personal Pictures</h1>
       <p class="nav-text text-muted">
         Manage your personal photos and clothing items for AI outfit generation.
       </p>
@@ -40,7 +40,7 @@
           <div class="card h-100">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="ai-seo-title">Clothing Items</h3>
+                <h3 class="ai-seo-title">Cloth Pictures</h3>
                 <span class="badge bg-secondary">1 item</span>
               </div>
 

@@ -3,49 +3,44 @@
   <div class="app-sidebar d-flex flex-column">
     <div class="sidebar-header">
       <button type="button" class="logo-button hover-btn">
-        <span class="logo-text">WardrobeAI</span>
+        <span class="logo-text">Banana App</span>
       </button>
     </div>
     <!-- Navigation Sections -->
     <div class="flex-grow-1">
-      <!-- Wardrobe Section -->
+      <!-- Picture Section -->
       <div class="nav-section">
-        <h6 class="section-title text mb-2">Wardrobe</h6>
+        <h6 class="section-title text mb-2">Dress Up</h6>
 
-        <a href="#my-wardrobe" class="nav-item" data-page="my-wardrobe">
+        <router-link to="/my-pictures" class="nav-item">
           <i class="bi bi-bag nav-icon"></i>
-          <span class="nav-text">My Wardrobe</span>
-        </a>
+          <span class="nav-text">My Pictures</span>
+        </router-link>
 
-        <a href="#try-outfits" class="nav-item" data-page="try-outfits">
+        <router-link to="/try-outfits" class="nav-item">
           <i class="bi bi-palette nav-icon"></i>
           <span class="nav-text">Try Outfits</span>
-        </a>
+        </router-link>
 
-        <a href="#recent-generations" class="nav-item" data-page="recent-generations">
+        <router-link to="/recent-outfits" class="nav-item">
           <i class="bi bi-clock-history nav-icon"></i>
-          <span class="nav-text">Recent Generations</span>
-        </a>
+          <span class="nav-text">Recent Outfits</span>
+        </router-link>
       </div>
 
       <!-- Management Section -->
       <div class="nav-section">
         <h6 class="section-title text mb-2">Management</h6>
 
-        <a href="#upload-photos" class="nav-item" data-page="upload-photos">
+        <router-link to="/uploads" class="nav-item">
           <i class="bi bi-person-plus nav-icon"></i>
-          <span class="nav-text">Upload Photos</span>
-        </a>
+          <span class="nav-text">Upload</span>
+        </router-link>
 
-        <a href="#upload-clothing" class="nav-item" data-page="upload-clothing">
-          <i class="bi bi-bag nav-icon"></i>
-          <span class="nav-text">Upload Clothing</span>
-        </a>
-
-        <a href="#usage-billing" class="nav-item" data-page="usage-billing">
+        <router-link to="/usage" class="nav-item">
           <i class="bi bi-credit-card nav-icon"></i>
-          <span class="nav-text">Usage & Billing</span>
-        </a>
+          <span class="nav-text">Usage</span>
+        </router-link>
       </div>
     </div>
     <!-- Profile Section -->
@@ -65,13 +60,13 @@
           <li>
             <a class="dropdown-item nav-item" href="#profile">
               <i class="bi bi-person nav-icon"></i>
-              <span class="nav-text">Edit Profile</span>
+              <span class="nav-text">Profile</span>
             </a>
           </li>
           <li>
             <a class="dropdown-item nav-item" href="#settings">
               <i class="bi bi-gear nav-icon"></i>
-              <span class="nav-text">Account Settings</span>
+              <span class="nav-text">Settings</span>
             </a>
           </li>
           <li>
