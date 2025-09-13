@@ -1,2 +1,3 @@
 # banana101-app
-google's new model trial application
+
+Sample application to test google's banana model
