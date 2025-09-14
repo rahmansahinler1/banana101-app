@@ -13,7 +13,7 @@
           <div class="card h-100">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="ai-seo-title">Personal Photos</h3>
+                <h3 class="card-title">Personal Photos</h3>
                 <span class="badge bg-secondary">1 photo</span>
               </div>
 
@@ -40,7 +40,7 @@
           <div class="card h-100">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="ai-seo-title">Cloth Pictures</h3>
+                <h3 class="card-title">Cloth Pictures</h3>
                 <span class="badge bg-secondary">1 item</span>
               </div>
 

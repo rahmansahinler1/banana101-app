@@ -12,7 +12,7 @@
         <div class="col-md-6 mb-4">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Current Usage</h3>
+              <h3 class="card-title mb-3">Current Usage</h3>
               <div class="usage-stats">
                 <div class="usage-item mb-3">
                   <div class="d-flex justify-content-between align-items-center mb-2">
@@ -51,7 +51,7 @@
         <div class="col-md-6 mb-4">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Subscription Plans</h3>
+              <h3 class="card-title mb-3">Subscription Plans</h3>
 
               <div class="plan-options">
                 <div class="plan-option current">
@@ -99,7 +99,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Usage History</h3>
+              <h3 class="card-title mb-3">Usage History</h3>
               <div class="table-responsive">
                 <table class="table">
                   <thead class="table-light">

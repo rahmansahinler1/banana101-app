@@ -12,7 +12,7 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="ai-seo-title">Generated Outfits</h3>
+                <h3 class="card-title">Generated Outfits</h3>
                 <div class="filter-controls">
                   <button class="btn btn-sm btn-outline-secondary me-2">All</button>
                   <button class="btn btn-sm btn-outline-secondary me-2">Favorites</button>

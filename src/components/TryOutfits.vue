@@ -12,7 +12,7 @@
         <div class="col-md-4 mb-4">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Select Your Photo</h3>
+              <h3 class="card-title mb-3">Select Your Photo</h3>
               <div class="selection-area">
                 <div class="selected-photo">
                   <div class="photo-placeholder large">
@@ -46,7 +46,7 @@
         <div class="col-md-4 mb-4">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Select Clothing</h3>
+              <h3 class="card-title mb-3">Select Clothing</h3>
               <div class="clothing-categories">
                 <div class="category-tabs">
                   <button class="btn btn-sm btn-outline-primary active me-2 mb-2">Shirts</button>
@@ -89,7 +89,7 @@
         <div class="col-md-4 mb-4">
           <div class="card h-100">
             <div class="card-body">
-              <h3 class="ai-seo-title mb-3">Generate Outfit</h3>
+              <h3 class="card-title mb-3">Generate Outfit</h3>
               <div class="generation-area">
                 <div class="generated-result">
                   <div class="result-placeholder">
