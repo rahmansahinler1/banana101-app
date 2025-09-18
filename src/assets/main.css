@@ -406,10 +406,6 @@
 }
 
 /* Upload Styles */
-.upload-area {
-  margin-bottom: 2rem;
-}
-
 .upload-dropzone {
   border: 3px dashed rgba(93, 93, 93, 0.3);
   border-radius: 1rem;
