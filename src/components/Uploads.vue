@@ -58,10 +58,9 @@
               <li>Supported file formats: JPG, PNG, WEBP</li>
               <li>Maximum file size is 5MB</li>
               <li>Use neutral backgrounds for your pictures</li>
-              <li>Ensure clothing is wrinkle-free</li>
+              <li>Ensure clothing is visible</li>
               <li>Good lighting is essential</li>
               <li>One item per photo</li>
-              <li>Include full garment in frame</li>
             </ul>
 
             <div class="mt-4">
