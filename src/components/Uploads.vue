@@ -123,11 +123,11 @@
               <div class="upload-summary">
                 <div class="d-flex justify-content-between">
                   <span class="nav-text text-muted">Yourself:</span>
-                  <span class="nav-text fw-semibold">0</span>
+                  <span class="nav-text fw-semibold">{{ userStore.pictureCounts.yourself }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                   <span class="nav-text text-muted">Clothes:</span>
-                  <span class="nav-text fw-semibold">0</span>
+                  <span class="nav-text fw-semibold">{{ userStore.pictureCounts.clothing }}</span>
                 </div>
               </div>
             </div>
@@ -140,6 +140,8 @@
 
 <script>
 import { uploadFile } from '@/api/api'
+import { mapStores } from 'pinia'
+import useUserStore from '@/stores/user'
 
 export default {
   data() {
@@ -153,6 +155,7 @@ export default {
     }
   },
   computed: {
+    ...mapStores(useUserStore),
     canUpload() {
       return this.selectedFile && this.selectedCategory && !this.isUploading
     },
@@ -220,6 +223,7 @@ export default {
         if (result.success) {
           this.uploadStatus = 'success'
           this.uploadMessage = 'Upload Sucessful'
+          this.userStore.incrementPictureCounts(this.selectedCategory)
           setTimeout(() => {
             this.removeFile()
           }, 2000)
