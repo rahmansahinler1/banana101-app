@@ -68,7 +68,7 @@
                 <button
                   class="btn btn-outline-success btn-sm me-2 mb-2"
                   @click="uploadFile"
-                  :disabled="!selectedFile"
+                  :disabled="!selectedFile || !selectedCategory"
                 >
                   <i class="bi bi-upload"></i> Upload
                 </button>
