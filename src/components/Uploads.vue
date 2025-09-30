@@ -28,8 +28,31 @@
                 @change="handleFileSelect"
               />
             </div>
-            <div v-else class="upload-dropzone mb-2">
+            <div v-else class="upload-dropzone mb-2 position-relative">
               <img :src="previewUrl" alt="Selected image" class="preview-image" />
+              <!-- Upload Overlay -->
+              <div v-if="uploadStatus" class="upload-overlay">
+                <!-- Uploading State -->
+                <div v-if="uploadStatus === 'uploading'" class="upload-feedback">
+                  <div class="spinner-border text-primary mb-2" role="status"></div>
+                  <p class="mb-0">Uploading...</p>
+                </div>
+
+                <!-- Success State -->
+                <div v-if="uploadStatus === 'success'" class="upload-feedback text-success">
+                  <i class="bi bi-check-circle" style="font-size: 3rem"></i>
+                  <p class="mb-0 fw-bold">{{ uploadMessage }}</p>
+                </div>
+
+                <!-- Error State -->
+                <div v-if="uploadStatus === 'error'" class="upload-feedback text-danger">
+                  <i class="bi bi-x-circle" style="font-size: 3rem"></i>
+                  <p class="mb-0 fw-bold">{{ uploadMessage }}</p>
+                  <button class="btn btn-sm btn-outline-danger mt-2" @click="uploadStatus = null">
+                    Dismiss
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div class="d-flex flex-row mt-4 justify-content-between align-items-start">
@@ -40,7 +63,7 @@
                   :class="
                     selectedCategory === 'yourself' ? 'btn-secondary' : 'btn-outline-secondary'
                   "
-                  :disabled="!selectedFile"
+                  :disabled="!selectedFile || isUploading"
                   @click="selectCategory('yourself')"
                 >
                   <i class="bi bi-person-fill"></i> Yourself
@@ -50,7 +73,7 @@
                   :class="
                     selectedCategory === 'clothing' ? 'btn-secondary' : 'btn-outline-secondary'
                   "
-                  :disabled="!selectedFile"
+                  :disabled="!selectedFile || isUploading"
                   @click="selectCategory('clothing')"
                 >
                   <i class="bi bi-tencent-qq"></i> Clothing
@@ -61,14 +84,14 @@
                 <button
                   class="btn btn-outline-danger btn-sm me-2 mb-2"
                   @click="removeFile"
-                  :disabled="!selectedFile"
+                  :disabled="!selectedFile || isUploading"
                 >
                   <i class="bi bi-trash"></i> Remove
                 </button>
                 <button
                   class="btn btn-outline-success btn-sm me-2 mb-2"
                   @click="uploadFile"
-                  :disabled="!selectedFile || !selectedCategory"
+                  :disabled="!selectedFile || !selectedCategory || isUploading"
                 >
                   <i class="bi bi-upload"></i> Upload
                 </button>
@@ -125,6 +148,8 @@ export default {
       previewUrl: null,
       selectedCategory: null,
       isUploading: false,
+      uploadStatus: null,
+      uploadMessage: '',
     }
   },
   computed: {
@@ -174,6 +199,8 @@ export default {
 
       this.selectedFile = file
       this.previewUrl = URL.createObjectURL(file)
+      this.uploadStatus = null
+      this.uploadMessage = ''
     },
     async uploadFile() {
       // Checks
@@ -181,22 +208,28 @@ export default {
         alert('Please select picture and category')
         return
       }
+      this.uploadStatus = 'uploading'
+      this.uploadMessage = ''
       this.isUploading = true
-      // File conversion
-      const fileBytes = await this.convertFile(this.selectedFile)
       // Upload
       try {
+        const fileBytes = await this.convertFile(this.selectedFile)
         const userId = window.APP_CONFIG.userId
         const result = await uploadFile(userId, this.selectedCategory, fileBytes)
 
         if (result.success) {
-          alert('Picture uploaded successfully!')
-          this.removeFile()
+          this.uploadStatus = 'success'
+          this.uploadMessage = 'Upload Sucessful'
+          setTimeout(() => {
+            this.removeFile()
+          }, 2000)
         } else {
-          alert(`Upload failed ${result.error}`)
+          this.uploadStatus = 'error'
+          this.uploadMessage = `Upload Failed: ${result.error}`
         }
       } catch (error) {
-        alert(`Upload error: ${error}`)
+        this.uploadStatus = 'error'
+        this.uploadMessage = `Upload Error: ${error.message}`
       } finally {
         this.isUploading = false
       }
@@ -219,6 +252,8 @@ export default {
       this.selectedFile = null
       this.previewUrl = null
       this.selectedCategory = null
+      this.uploadStatus = null
+      this.uploadMessage = ''
     },
   },
 }
