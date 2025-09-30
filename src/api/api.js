@@ -55,6 +55,38 @@ export const initializeUser = async function (userId) {
   }
 }
 
+export const uploadFile = async function (userId, category, fileBytes) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/upload_file`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        category: category,
+        fileBytes: fileBytes,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+      data: data,
+    }
+  } catch (error) {
+    console.error('Failed to upload file: ', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}
+
 // Sample code for correct backend api call
 window.selectDomain = async function selectDomain(domainId, userID) {
   try {

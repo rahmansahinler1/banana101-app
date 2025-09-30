@@ -67,7 +67,7 @@
                 </button>
                 <button
                   class="btn btn-outline-success btn-sm me-2 mb-2"
-                  @click="handleFileUpload"
+                  @click="uploadFile"
                   :disabled="!selectedFile"
                 >
                   <i class="bi bi-upload"></i> Upload
@@ -116,6 +116,8 @@
 </template>
 
 <script>
+import { uploadFile } from '@/api/api'
+
 export default {
   data() {
     return {
@@ -173,6 +175,43 @@ export default {
       this.selectedFile = file
       this.previewUrl = URL.createObjectURL(file)
     },
+    async uploadFile() {
+      // Checks
+      if (!this.selectedFile || !this.selectedCategory) {
+        alert('Please select picture and category')
+        return
+      }
+      this.isUploading = true
+      // File conversion
+      const fileBytes = await this.convertFile(this.selectedFile)
+      // Upload
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await uploadFile(userId, this.selectedCategory, fileBytes)
+
+        if (result.success) {
+          alert('Picture uploaded successfully!')
+          this.removeFile()
+        } else {
+          alert(`Upload failed ${result.error}`)
+        }
+      } catch (error) {
+        alert(`Upload error: ${error}`)
+      } finally {
+        this.isUploading = false
+      }
+    },
+    convertFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          const base64String = reader.result.split(',')[1]
+          resolve(base64String)
+        }
+        reader.onerror = (error) => reject(error)
+      })
+    },
     removeFile() {
       if (this.previewUrl) {
         URL.revokeObjectURL(this.previewUrl)
@@ -180,9 +219,6 @@ export default {
       this.selectedFile = null
       this.previewUrl = null
       this.selectedCategory = null
-    },
-    handleFileUpload(event) {
-      null
     },
   },
 }
