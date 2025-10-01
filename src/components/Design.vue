@@ -1,5 +1,5 @@
 <template>
-  <!-- Try Outfits Page -->
+  <!-- Design Page -->
   <div id="try-outfits" class="page-content">
     <div class="container-fluid">
       <h1 class="dashboard-title mb-3">Try Outfits</h1>
@@ -116,4 +116,8 @@
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  name: 'Design',
+}
+</script>

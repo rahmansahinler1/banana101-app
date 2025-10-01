@@ -2,20 +2,20 @@
   <div class="app-container">
     <Sidebar />
     <div class="app-content">
-      <Uploads />
+      <Upload />
     </div>
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar.vue'
-import Uploads from '@/components/Uploads.vue'
+import Upload from '@/components/Upload.vue'
 
 export default {
   name: 'Panel4',
   components: {
     Sidebar,
-    Uploads,
+    Upload,
   },
 }
 </script>

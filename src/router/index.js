@@ -12,22 +12,22 @@ const routes = [
   },
   {
     name: 'Panel1',
-    path: '/my-pictures',
+    path: '/gallery',
     component: Panel1,
   },
   {
     name: 'Panel2',
-    path: '/try-outfits',
+    path: '/design',
     component: Panel2,
   },
   {
     name: 'Panel3',
-    path: '/recent-outfits',
+    path: '/recents',
     component: Panel3,
   },
   {
     name: 'Panel4',
-    path: '/uploads',
+    path: '/upload',
     component: Panel4,
   },
   {

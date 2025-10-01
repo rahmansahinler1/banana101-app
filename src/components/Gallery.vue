@@ -1,5 +1,5 @@
 <template>
-  <!-- My Pictures Page -->
+  <!-- Gallery Page -->
   <div id="my-pictures" class="page-content active">
     <div class="container-fluid">
       <h1 class="dashboard-title mb-3">Personal Pictures</h1>
@@ -71,7 +71,7 @@ import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
 
 export default {
-  name: 'MyPictures',
+  name: 'Gallery',
   computed: {
     ...mapStores(useUserStore),
     userCred() {

@@ -12,19 +12,19 @@
       <div class="nav-section">
         <h6 class="section-title text mb-2">Dress Up</h6>
 
-        <router-link to="/my-pictures" class="nav-item">
+        <router-link to="/gallery" class="nav-item">
           <i class="bi bi-bag nav-icon"></i>
-          <span class="nav-text">My Pictures</span>
+          <span class="nav-text">Gallery</span>
         </router-link>
 
-        <router-link to="/try-outfits" class="nav-item">
+        <router-link to="/design" class="nav-item">
           <i class="bi bi-palette nav-icon"></i>
-          <span class="nav-text">Try Outfits</span>
+          <span class="nav-text">Design</span>
         </router-link>
 
-        <router-link to="/recent-outfits" class="nav-item">
+        <router-link to="/recents" class="nav-item">
           <i class="bi bi-clock-history nav-icon"></i>
-          <span class="nav-text">Recent Outfits</span>
+          <span class="nav-text">Recents</span>
         </router-link>
       </div>
 
@@ -32,7 +32,7 @@
       <div class="nav-section">
         <h6 class="section-title text mb-2">Management</h6>
 
-        <router-link to="/uploads" class="nav-item">
+        <router-link to="/upload" class="nav-item">
           <i class="bi bi-person-plus nav-icon"></i>
           <span class="nav-text">Upload</span>
         </router-link>

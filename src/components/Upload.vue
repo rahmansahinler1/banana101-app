@@ -144,6 +144,7 @@ import { mapStores } from 'pinia'
 import useUserStore from '@/stores/user'
 
 export default {
+  name: 'Upload',
   data() {
     return {
       selectedFile: null,

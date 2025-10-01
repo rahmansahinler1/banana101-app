@@ -2,20 +2,20 @@
   <div class="app-container">
     <Sidebar />
     <div class="app-content">
-      <MyPictures />
+      <Gallery />
     </div>
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar.vue'
-import MyPictures from '@/components/MyPictures.vue'
+import Gallery from '@/components/Gallery.vue'
 
 export default {
   name: 'firstPanel',
   components: {
     Sidebar,
-    MyPictures,
+    Gallery,
   },
 }
 </script>

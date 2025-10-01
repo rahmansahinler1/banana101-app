@@ -117,4 +117,8 @@
   </div>
 </template>
 
-<script></script>
+<script>
+export default {
+  name: 'Recents',
+}
+</script>

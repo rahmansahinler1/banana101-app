@@ -2,20 +2,20 @@
   <div class="app-container">
     <Sidebar />
     <div class="app-content">
-      <TryOutfits />
+      <Design />
     </div>
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar.vue'
-import TryOutfits from '@/components/TryOutfits.vue'
+import Design from '@/components/Design.vue'
 
 export default {
   name: 'secondPanel',
   components: {
     Sidebar,
-    TryOutfits,
+    Design,
   },
 }
 </script>
