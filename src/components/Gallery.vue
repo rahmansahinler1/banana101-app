@@ -1,62 +1,37 @@
 <template>
   <!-- Gallery Page -->
-  <div id="my-pictures" class="page-content active">
-    <div class="container-fluid">
-      <h1 class="dashboard-title mb-3">Personal Pictures</h1>
-      <p class="nav-text text-muted">
-        Manage your personal photos and clothing items for AI outfit generation.
-      </p>
+  <div class="container-fluid">
+    <h1 class="dashboard-title mb-3">Gallery</h1>
 
-      <div class="row">
-        <!-- Personal Photos Section -->
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title">Personal Photos</h3>
-                <span class="badge bg-secondary">1 photo</span>
-              </div>
-
-              <div class="photo-grid">
-                <div class="photo-item">
-                  <div class="photo-placeholder">
-                    <i class="bi bi-person-fill" style="font-size: 2rem; color: #5d5d5d"></i>
-                  </div>
-                  <small class="nav-text text-muted">Photo 1</small>
-                </div>
-                <div class="photo-item add-photo">
-                  <div class="photo-placeholder add-placeholder">
-                    <i class="bi bi-plus-lg" style="font-size: 2rem; color: #5d5d5d"></i>
-                  </div>
-                  <small class="nav-text text-muted">Add Photo</small>
-                </div>
-              </div>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div class="card" style="min-height: 90vh">
+          <div class="card-body">
+            <!-- Filter Buttons -->
+            <div class="gallery-filters mb-4">
+              <button class="btn btn-sm btn-secondary me-2">
+                All <span class="badge bg-light text-dark ms-1">0</span>
+              </button>
+              <button class="btn btn-sm btn-outline-secondary me-2">
+                Yourself <span class="badge bg-light text-dark ms-1">0</span>
+              </button>
+              <button class="btn btn-sm btn-outline-secondary">
+                Clothing <span class="badge bg-light text-dark ms-1">0</span>
+              </button>
             </div>
-          </div>
-        </div>
 
-        <!-- Clothing Items Section -->
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="card-title">Cloth Pictures</h3>
-                <span class="badge bg-secondary">1 item</span>
-              </div>
-
-              <div class="clothing-grid">
-                <div class="clothing-item">
-                  <div class="clothing-placeholder">
-                    <i class="bi bi-bag-fill" style="font-size: 1.5rem; color: #5d5d5d"></i>
+            <!-- Gallery Grid -->
+            <div class="gallery-grid">
+              <!-- Gallery items will go here -->
+              <div class="gallery-item">
+                <div class="gallery-image-wrapper">
+                  <div class="gallery-placeholder">
+                    <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
                   </div>
-                  <small class="nav-text text-muted">Shirt</small>
                 </div>
-                <div class="clothing-item add-clothing">
-                  <div class="clothing-placeholder add-placeholder">
-                    <i class="bi bi-plus-lg" style="font-size: 1.5rem; color: #5d5d5d"></i>
-                  </div>
-                  <small class="nav-text text-muted">Add Item</small>
-                </div>
+                <button class="btn btn-sm btn-outline-danger gallery-delete-btn">
+                  <i class="bi bi-trash"></i>
+                </button>
               </div>
             </div>
           </div>
