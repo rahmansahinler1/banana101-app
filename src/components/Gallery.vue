@@ -10,13 +10,20 @@
             <!-- Filter Buttons -->
             <div class="gallery-filters mb-4">
               <button class="btn btn-sm btn-secondary me-2">
-                All <span class="badge bg-light text-dark ms-1">0</span>
+                All
+                <span class="badge bg-light text-dark ms-1">{{ getTotalPictureCount }}</span>
               </button>
               <button class="btn btn-sm btn-outline-secondary me-2">
-                Yourself <span class="badge bg-light text-dark ms-1">0</span>
+                Yourself
+                <span class="badge bg-light text-dark ms-1">{{
+                  userStore.pictureCounts.yourself
+                }}</span>
               </button>
               <button class="btn btn-sm btn-outline-secondary">
-                Clothing <span class="badge bg-light text-dark ms-1">0</span>
+                Clothing
+                <span class="badge bg-light text-dark ms-1">{{
+                  userStore.pictureCounts.clothing
+                }}</span>
               </button>
             </div>
 
@@ -61,6 +68,12 @@ export default {
     ...mapStores(useUserStore),
     userCred() {
       return this.userStore?.userCred || null
+    },
+    getTotalPictureCount() {
+      return (
+        (this.userStore?.pictureCounts?.yourself || 0) +
+        (this.userStore?.pictureCounts?.clothing || 0)
+      )
     },
   },
 }
