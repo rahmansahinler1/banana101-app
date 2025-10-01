@@ -25,13 +25,23 @@
               <!-- Gallery items will go here -->
               <div class="gallery-item">
                 <div class="gallery-image-wrapper">
+                  <!-- Category Label -->
+                  <span class="gallery-category-badge">Yourself</span>
+
                   <div class="gallery-placeholder">
                     <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
                   </div>
                 </div>
-                <button class="btn btn-sm btn-outline-danger gallery-delete-btn">
-                  <i class="bi bi-trash"></i>
-                </button>
+
+                <!-- Action Buttons (appear on hover) -->
+                <div class="gallery-actions">
+                  <button class="btn btn-sm gallery-action-btn">
+                    <i class="bi bi-stars"></i>
+                  </button>
+                  <button class="btn btn-sm gallery-action-btn">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
