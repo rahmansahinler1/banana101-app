@@ -9,17 +9,33 @@
           <div class="card-body">
             <!-- Filter Buttons -->
             <div class="gallery-filters mb-4">
-              <button class="btn btn-sm btn-secondary me-2">
+              <button
+                class="btn btn-sm me-2"
+                :class="this.selectedFilter === 'all' ? 'btn-secondary' : 'btn-outline-secondary'"
+                @click="selectFilter('all')"
+              >
                 All
                 <span class="badge bg-light text-dark ms-1">{{ getTotalPictureCount }}</span>
               </button>
-              <button class="btn btn-sm btn-outline-secondary me-2">
+              <button
+                class="btn btn-sm me-2"
+                :class="
+                  this.selectedFilter === 'yourself' ? 'btn-secondary' : 'btn-outline-secondary'
+                "
+                @click="selectFilter('yourself')"
+              >
                 Yourself
                 <span class="badge bg-light text-dark ms-1">{{
                   userStore.pictureCounts.yourself
                 }}</span>
               </button>
-              <button class="btn btn-sm btn-outline-secondary">
+              <button
+                class="btn btn-sm me-2"
+                :class="
+                  this.selectedFilter === 'clothing' ? 'btn-secondary' : 'btn-outline-secondary'
+                "
+                @click="selectFilter('clothing')"
+              >
                 Clothing
                 <span class="badge bg-light text-dark ms-1">{{
                   userStore.pictureCounts.clothing
@@ -64,6 +80,11 @@ import { mapStores } from 'pinia'
 
 export default {
   name: 'Gallery',
+  data() {
+    return {
+      selectedFilter: 'all',
+    }
+  },
   computed: {
     ...mapStores(useUserStore),
     userCred() {
@@ -74,6 +95,11 @@ export default {
         (this.userStore?.pictureCounts?.yourself || 0) +
         (this.userStore?.pictureCounts?.clothing || 0)
       )
+    },
+  },
+  methods: {
+    selectFilter(filter) {
+      this.selectedFilter = filter
     },
   },
 }
