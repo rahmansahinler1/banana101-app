@@ -15,7 +15,7 @@
                 @click="selectFilter('all')"
               >
                 All
-                <span class="badge bg-light text-dark ms-1">{{ getTotalPictureCount }}</span>
+                <span class="badge bg-light text-dark ms-1">{{ userStore.pictureCounts.all }}</span>
               </button>
               <button
                 class="btn btn-sm me-2"
@@ -46,17 +46,16 @@
             <!-- Gallery Grid -->
             <div class="gallery-grid">
               <!-- Gallery items will go here -->
-              <div class="gallery-item">
+              <div class="gallery-item" v-for="image in getPreviewImages" :key="image.id">
                 <div class="gallery-image-wrapper">
-                  <!-- Category Label -->
-                  <span class="gallery-category-badge">Yourself</span>
-
+                  <!-- Category Badge -->
+                  <span class="gallery-category-badge">{{ image.category }}</span>
+                  <!-- Image -->
                   <div class="gallery-placeholder">
-                    <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
+                    <img :src="image.base64" :alt="image.category" />
                   </div>
                 </div>
-
-                <!-- Action Buttons (appear on hover) -->
+                <!-- Action Buttons -->
                 <div class="gallery-actions">
                   <button class="btn btn-sm gallery-action-btn">
                     <i class="bi bi-stars"></i>
@@ -64,6 +63,15 @@
                   <button class="btn btn-sm gallery-action-btn">
                     <i class="bi bi-trash"></i>
                   </button>
+                </div>
+              </div>
+
+              <!-- Empty state -->
+              <div class="gallery-item" v-if="getPreviewImages.length === 0">
+                <div class="gallery-image-wrapper">
+                  <div class="gallery-placeholder">
+                    <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -90,11 +98,26 @@ export default {
     userCred() {
       return this.userStore?.userCred || null
     },
-    getTotalPictureCount() {
-      return (
-        (this.userStore?.pictureCounts?.yourself || 0) +
-        (this.userStore?.pictureCounts?.clothing || 0)
-      )
+    getPreviewImages() {
+      const yourself = this.userStore?.previewImages?.yourself || []
+      const clothing = this.userStore?.previewImages?.clothing || []
+
+      let images = []
+
+      if (this.selectedFilter === 'yourself') {
+        images = yourself.map((img) => ({ ...img, category: 'Yourself' }))
+      } else if (this.selectedFilter === 'clothing') {
+        images = clothing.map((img) => ({ ...img, category: 'Clothing' }))
+      } else {
+        images = [
+          ...yourself.map((img) => ({ ...img, category: 'Yourself' })),
+          ...clothing.map((img) => ({ ...img, category: 'Clothing' })),
+        ]
+      }
+
+      return images.sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at)
+      })
     },
   },
   methods: {

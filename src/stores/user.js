@@ -12,6 +12,7 @@ export default defineStore('user', {
       return {
         yourself: state.previewImages.yourself.length,
         clothing: state.previewImages.clothing.length,
+        all: state.previewImages.yourself.length + state.previewImages.clothing.length,
       }
     },
   },
@@ -27,8 +28,19 @@ export default defineStore('user', {
         const preview_fetch = await getPreviewImages(userId)
         if (preview_fetch.success) {
           const previews = preview_fetch.data.previews
-          this.previewImages.yourself = previews.yourself || []
-          this.previewImages.clothing = previews.clothing || []
+
+          // Map and add data URL prefix
+          this.previewImages.yourself = (previews.yourself || []).map((img) => ({
+            id: img.id,
+            base64: `data:image/jpeg;base64,${img.base64}`,
+            creted_at: img.created_at,
+          }))
+
+          this.previewImages.clothing = (previews.clothing || []).map((img) => ({
+            id: img.id,
+            base64: `data:image/jpeg;base64,${img.base64}`,
+            creted_at: img.created_at,
+          }))
         }
       } catch (error) {
         console.log(error)
@@ -38,6 +50,7 @@ export default defineStore('user', {
       this.previewImages[category].push({
         id: imageData.picture_id,
         base64: `data:image/jpeg;base64,${imageData.preview_base64}`,
+        creted_at: imageData.created_at,
       })
     },
   },
