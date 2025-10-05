@@ -296,15 +296,23 @@
 }
 
 .gallery-action-btn:hover {
-  background-color: rgba(93, 93, 93, 0.9);
+  background-color: rgba(200, 200, 200, 0.3);
 }
 
 .gallery-action-btn:first-child:hover {
-  background-color: rgba(93, 93, 93, 0.85);
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+.gallery-action-btn:first-child:hover i {
+  color: #0d6efd;
 }
 
 .gallery-action-btn:last-child:hover {
-  background-color: rgba(93, 93, 93, 0.85);
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+.gallery-action-btn:last-child:hover i {
+  color: #dc3545;
 }
 
 /* Responsive Grid */

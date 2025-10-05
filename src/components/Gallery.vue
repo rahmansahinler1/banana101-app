@@ -2,10 +2,13 @@
   <!-- Gallery Page -->
   <div class="container-fluid">
     <h1 class="dashboard-title mb-3">Gallery</h1>
+    <p class="nav-text text-muted">
+      Your personal image gallery. Select and wear the clothes on design page.
+    </p>
 
     <div class="row">
       <div class="col-12 mb-4">
-        <div class="card" style="min-height: 90vh">
+        <div class="card" style="min-height: 85vh">
           <div class="card-body">
             <!-- Filter Buttons -->
             <div class="gallery-filters mb-4">
