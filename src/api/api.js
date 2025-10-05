@@ -27,9 +27,37 @@ export const healthCheck = async function () {
   }
 }
 
-export const initializeUser = async function (userId) {
+export const getUser = async function (userId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/initialize_user`, {
+    const response = await fetch(`${API_BASE_URL}/get_user`, {
+      method: 'POST',
+      body: JSON.stringify({ user_id: userId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+      data: data,
+    }
+  } catch (error) {
+    console.error('Health check failed:', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}
+
+export const getPreviewImages = async function (userId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get_previews`, {
       method: 'POST',
       body: JSON.stringify({ user_id: userId }),
       headers: {

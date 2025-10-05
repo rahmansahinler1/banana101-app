@@ -224,7 +224,7 @@ export default {
         if (result.success) {
           this.uploadStatus = 'success'
           this.uploadMessage = 'Upload Sucessful'
-          this.userStore.incrementPictureCounts(this.selectedCategory)
+          this.userStore.addPreviewImage(this.selectedCategory, result.data)
           setTimeout(() => {
             this.removeFile()
           }, 2000)
