@@ -57,12 +57,31 @@
                 </div>
                 <!-- Action Buttons -->
                 <div class="gallery-actions">
-                  <button class="btn btn-sm gallery-action-btn">
-                    <i class="bi bi-stars"></i>
-                  </button>
-                  <button class="btn btn-sm gallery-action-btn">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                  <!-- Show confirmation if this image is being deleted -->
+                  <template v-if="deleteConfirmId === image.id">
+                    <button
+                      class="btn btn-sm gallery-action-btn"
+                      @click="deleteImage(image.id, image.category)"
+                    >
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button class="btn btn-sm gallery-action-btn" @click="cancelDelete">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </template>
+
+                  <!-- Normal buttons -->
+                  <template v-else>
+                    <button class="btn btn-sm gallery-action-btn">
+                      <i class="bi bi-stars"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm gallery-action-btn"
+                      @click="showDeleteConfirm(image.id)"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </template>
                 </div>
               </div>
 
@@ -85,12 +104,14 @@
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
+import { deleteImage } from '@/api/api'
 
 export default {
   name: 'Gallery',
   data() {
     return {
       selectedFilter: 'all',
+      deleteConfirmId: null,
     }
   },
   computed: {
@@ -123,6 +144,29 @@ export default {
   methods: {
     selectFilter(filter) {
       this.selectedFilter = filter
+    },
+    showDeleteConfirm(imageId) {
+      this.deleteConfirmId = imageId
+    },
+    cancelDelete() {
+      this.deleteConfirmId = null
+    },
+    async deleteImage(imageId, category) {
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await deleteImage(userId, imageId)
+
+        if (result.success) {
+          // Remove from store
+          this.userStore.removePreviewImage(category.toLowerCase(), imageId)
+          this.deleteConfirmId = null
+        } else {
+          alert('Failed to delete image')
+        }
+      } catch (error) {
+        console.error('Delete error:', error)
+        alert('Error deleting image')
+      }
     },
   },
 }

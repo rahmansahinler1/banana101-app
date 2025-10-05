@@ -53,5 +53,10 @@ export default defineStore('user', {
         creted_at: imageData.created_at,
       })
     },
+    removePreviewImage(category, imageId) {
+      this.previewImages[category] = this.previewImages[category].filter(
+        (img) => img.id !== imageId
+      )
+    },
   },
 })
