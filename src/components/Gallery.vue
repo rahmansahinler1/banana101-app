@@ -87,12 +87,14 @@
                   </template>
                 </div>
               </div>
-
-              <!-- Empty state -->
-              <div class="gallery-item" v-if="getPreviewImages.length === 0">
+              <!-- Upload button -->
+              <div class="gallery-item">
                 <div class="gallery-image-wrapper">
-                  <div class="gallery-placeholder">
-                    <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
+                  <div class="gallery-upload-content">
+                    <i
+                      class="bi bi-plus-circle-fill gallery-upload-icon"
+                      @click="this.$router.push('/upload')"
+                    ></i>
                   </div>
                 </div>
               </div>
