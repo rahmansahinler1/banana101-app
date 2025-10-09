@@ -48,12 +48,12 @@
       <div class="dropdown">
         <button
           type="button"
-          class="profile-button dropdown-toggle"
+          class="profile-button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
           <i class="bi bi-person-circle fs-4 me-3" style="color: #5d5d5d"></i>
-          <span class="profile-name">John Doe</span>
+          <span class="profile-name">Ebru Saki</span>
           <i class="bi bi-chevron-down ms-auto" style="color: #5d5d5d; font-size: 0.9rem"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-up">

@@ -1,10 +1,7 @@
 <template>
   <!-- Gallery Page -->
   <div class="container-fluid">
-    <h1 class="dashboard-title mb-3">Gallery</h1>
-    <p class="nav-text text-muted">
-      Your personal image gallery. Select and wear the clothes on design page.
-    </p>
+    <h1 class="dashboard-title mb-3 text-center">Gallery</h1>
 
     <div class="row">
       <div class="col-12 mb-4">

@@ -1,8 +1,7 @@
 <template>
   <!-- Upload Clothing Page -->
   <div class="container-fluid">
-    <h1 class="dashboard-title mb-3">Upload Picture</h1>
-    <p class="nav-text text-muted">Select the picture, select category then upload</p>
+    <h1 class="dashboard-title mb-3 text-center">Upload Picture</h1>
 
     <div class="row">
       <div class="col-md-8 mb-4">
