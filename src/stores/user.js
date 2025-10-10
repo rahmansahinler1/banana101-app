@@ -33,13 +33,13 @@ export default defineStore('user', {
           this.previewImages.yourself = (previews.yourself || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
-            creted_at: img.created_at,
+            created_at: img.created_at,
           }))
 
           this.previewImages.clothing = (previews.clothing || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
-            creted_at: img.created_at,
+            created_at: img.created_at,
           }))
         }
       } catch (error) {
@@ -50,7 +50,7 @@ export default defineStore('user', {
       this.previewImages[category].push({
         id: imageData.picture_id,
         base64: `data:image/jpeg;base64,${imageData.preview_base64}`,
-        creted_at: imageData.created_at,
+        created_at: imageData.created_at,
       })
     },
     removePreviewImage(category, imageId) {

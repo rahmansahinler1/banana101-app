@@ -12,6 +12,7 @@
             </h3>
             <div
               class="selection-card"
+              :class="{ disabled: loadingCards.yourself || errorCards.yourself }"
               @click="!loadingCards.yourself && !errorCards.yourself && openModal('yourself')"
             >
               <!-- Error State -->
@@ -20,7 +21,7 @@
                 <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.yourself }}</p>
                 <button
                   class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="errorCards.yourself = null"
+                  @click.stop="dismissError('yourself')"
                 >
                   Dismiss
                 </button>
@@ -41,7 +42,7 @@
 
               <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
-                <i class="bi bi-cursor-fill me-2"></i>Click to select
+                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
               </p>
             </div>
           </div>
@@ -57,6 +58,7 @@
             </h3>
             <div
               class="selection-card"
+              :class="{ disabled: loadingCards.clothing || errorCards.clothing }"
               @click="!loadingCards.clothing && !errorCards.clothing && openModal('clothing')"
             >
               <!-- Error State -->
@@ -65,7 +67,7 @@
                 <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.clothing }}</p>
                 <button
                   class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="errorCards.clothing = null"
+                  @click.stop="dismissError('clothing')"
                 >
                   Dismiss
                 </button>
@@ -86,7 +88,7 @@
 
               <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
-                <i class="bi bi-cursor-fill me-2"></i>Click to select
+                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
               </p>
             </div>
           </div>
@@ -100,6 +102,7 @@
             <h3 class="card-title mb-3 text-center"><i class="bi bi-star-fill me-2"></i>Style</h3>
             <div
               class="selection-card"
+              :class="{ disabled: loadingCards.style || errorCards.style }"
               @click="!loadingCards.style && !errorCards.style && openModal('style')"
             >
               <!-- Error State -->
@@ -108,7 +111,7 @@
                 <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.style }}</p>
                 <button
                   class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="errorCards.style = null"
+                  @click.stop="dismissError('style')"
                 >
                   Dismiss
                 </button>
@@ -129,7 +132,7 @@
 
               <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
-                <i class="bi bi-cursor-fill me-2"></i>Click to select
+                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
               </p>
             </div>
           </div>
@@ -182,10 +185,6 @@
               >
                 <div class="gallery-image-wrapper">
                   <img :src="image.base64" :alt="modalCategory" />
-                  <!-- Selection Checkmark -->
-                  <div v-if="selectedImageId === image.id" class="selection-checkmark">
-                    <i class="bi bi-check-circle-fill"></i>
-                  </div>
                 </div>
               </div>
             </div>
@@ -240,6 +239,16 @@ export default {
         clothing: null,
         style: null,
       },
+      errorTimeouts: {
+        yourself: null,
+        clothing: null,
+        style: null,
+      },
+      pendingRequests: {
+        yourself: null,
+        clothing: null,
+        style: null,
+      },
     }
   },
   computed: {
@@ -281,37 +290,90 @@ export default {
     async confirmSelection() {
       if (!this.selectedImageId || !this.modalCategory) return
 
+      // Store values before clearing state
+      const selectedId = this.selectedImageId
+      const category = this.modalCategory
+
+      // Create unique request ID to handle race conditions
+      const requestId = Date.now()
+      this.pendingRequests[category] = requestId
+
+      // Close modal and reset state
       this.showModal = false
-      this.loadingCards[this.modalCategory] = true
+      this.selectedImageId = null
+      this.modalCategory = null
+
+      this.loadingCards[category] = true
 
       try {
         const userId = window.APP_CONFIG.userId
-        const result = await getFullImage(userId, this.selectedImageId)
+        const result = await getFullImage(userId, selectedId)
+
+        // Check if this is still the latest request (race condition protection)
+        if (this.pendingRequests[category] !== requestId) {
+          return // Ignore outdated response
+        }
 
         if (result.success) {
-          this.selections[this.modalCategory] = {
-            id: this.selectedImageId,
+          this.selections[category] = {
+            id: selectedId,
             base64: `data:image/jpeg;base64,${result.data.image_base64}`,
           }
-          this.loadingCards[this.modalCategory] = false
+          this.loadingCards[category] = false
+          this.pendingRequests[category] = null
         } else {
           // API returned success: false
-          this.loadingCards[this.modalCategory] = false
-          this.showError(this.modalCategory, result.error || 'Failed to load image')
+          this.loadingCards[category] = false
+          this.pendingRequests[category] = null
+          this.showError(category, result.error || 'Failed to load image')
         }
       } catch (error) {
-        // Network or unexpected error
-        this.loadingCards[this.modalCategory] = false
-        this.showError(this.modalCategory, 'Network error. Please try again.')
+        // Only show error if still latest request
+        if (this.pendingRequests[category] === requestId) {
+          this.loadingCards[category] = false
+          this.pendingRequests[category] = null
+          this.showError(category, 'Network error. Please try again.')
+        }
       }
     },
     showError(category, message) {
+      // Clear existing timeout if any
+      if (this.errorTimeouts[category]) {
+        clearTimeout(this.errorTimeouts[category])
+      }
+
       this.errorCards[category] = message
-      // Auto-clear error after 5 seconds
-      setTimeout(() => {
+
+      // Store timeout ID for cleanup
+      this.errorTimeouts[category] = setTimeout(() => {
         this.errorCards[category] = null
+        this.errorTimeouts[category] = null
       }, 5000)
     },
+    dismissError(category) {
+      // Clear timeout if exists
+      if (this.errorTimeouts[category]) {
+        clearTimeout(this.errorTimeouts[category])
+        this.errorTimeouts[category] = null
+      }
+      this.errorCards[category] = null
+    },
+    handleEscape(event) {
+      if (event.key === 'Escape' && this.showModal) {
+        this.closeModal()
+      }
+    },
+  },
+  mounted() {
+    window.addEventListener('keydown', this.handleEscape)
+  },
+  beforeUnmount() {
+    // Clear all timeouts on component destroy
+    Object.values(this.errorTimeouts).forEach((timeout) => {
+      if (timeout) clearTimeout(timeout)
+    })
+    // Remove event listener
+    window.removeEventListener('keydown', this.handleEscape)
   },
 }
 </script>

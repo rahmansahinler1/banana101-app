@@ -106,7 +106,7 @@ export const getFullImage = async function (userId, imageId) {
       data: data,
     }
   } catch (error) {
-    console.error('Health check failed:', error)
+    console.error('Failed to fetch full image:', error)
     return {
       success: false,
       error: error.message,

@@ -222,10 +222,20 @@
   transform: translateY(-2px);
 }
 
+.gallery-item:hover .gallery-actions {
+  opacity: 1;
+}
+
+.gallery-item.selected {
+  border: 3px solid #00b7ed;
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.3);
+  transform: translateY(-4px);
+}
+
 .gallery-image-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 125%; /* 1:1 Aspect Ratio */
+  padding-bottom: 125%;
   overflow: hidden;
   background-color: rgba(93, 93, 93, 0.05);
 }
@@ -288,10 +298,6 @@
   background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
 }
 
-.gallery-item:hover .gallery-actions {
-  opacity: 1;
-}
-
 .gallery-action-btn {
   flex: 1;
   background-color: rgba(93, 93, 93, 0.7);
@@ -315,7 +321,7 @@
 }
 
 .gallery-action-btn:first-child:hover i {
-  color: #0d6efd;
+  color: #00b7ed;
 }
 
 .gallery-action-btn:last-child:hover {
@@ -370,7 +376,7 @@
 }
 
 .upload-dropzone:hover {
-  border-color: #0d6efd;
+  border-color: #00b7ed;
   background-color: rgba(13, 110, 253, 0.05);
 }
 
@@ -422,8 +428,12 @@
   justify-content: center;
 }
 
-.selection-card:hover {
-  border-color: #0d6efd;
+.selection-card.disabled {
+  cursor: not-allowed;
+}
+
+.selection-card:hover:not(.disabled) {
+  border-color: #00b7ed;
   background-color: rgba(13, 110, 253, 0.05);
 }
 
@@ -479,30 +489,6 @@
   gap: 0.25rem;
 }
 
-/* Selection Modal Styles */
-.gallery-item.selected {
-  border: 3px solid #0d6efd;
-  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.3);
-  transform: translateY(-4px);
-}
-
-.selection-checkmark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 3rem;
-  color: #0d6efd;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  width: 4rem;
-  height: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
 /* Card Loading & Error Overlays */
 .card-loading-overlay,
 .card-error-overlay {
@@ -526,6 +512,28 @@
 
 .card-error-overlay {
   cursor: default;
+}
+
+/* Modal Footer Buttons */
+.modal-footer .btn {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+}
+
+.modal-footer .btn-primary {
+  background-color: #00b7ed;
+  border-color: #00b7ed;
+}
+
+.modal-footer .btn-primary:hover {
+  background-color: #0095c7;
+  border-color: #0095c7;
+}
+
+.modal-footer .btn-primary:disabled {
+  background-color: #00b7ed;
+  border-color: #00b7ed;
+  opacity: 0.5;
 }
 
 /* Responsive Design */
