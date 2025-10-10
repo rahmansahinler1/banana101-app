@@ -47,7 +47,10 @@
     <!-- Generate Button -->
     <div class="row">
       <div class="col-12 text-center mb-4">
-        <button class="generate-btn"><i class="bi bi-magic me-2"></i>Generate</button>
+        <button class="generate-btn">
+          <span>Generate</span>
+          <span><i class="bi bi-magic"></i> 20</span>
+        </button>
       </div>
     </div>
   </div>

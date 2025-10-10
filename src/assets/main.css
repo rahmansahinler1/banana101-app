@@ -448,17 +448,35 @@
   font-family: var(--font-family-base);
   font-size: 14px;
   font-weight: 400;
-  background-color: #0d6efd;
+  background-color: #00b7ed;
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  padding: 0.75rem 3rem;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 240px;
+  height: 40px;
 }
 
 .generate-btn:hover {
-  background-color: #0b5ed7;
+  background-color: #0095c7;
+}
+
+.generate-btn span:last-child {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 400;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 /* Responsive Design */
