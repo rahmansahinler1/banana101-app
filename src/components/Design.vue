@@ -10,12 +10,36 @@
             <h3 class="card-title mb-3 text-center">
               <i class="bi bi-person-fill me-2"></i>Yourself
             </h3>
-            <div class="selection-card" @click="openModal('yourself')">
+            <div
+              class="selection-card"
+              @click="!loadingCards.yourself && !errorCards.yourself && openModal('yourself')"
+            >
+              <!-- Error State -->
+              <div v-if="errorCards.yourself" class="card-error-overlay">
+                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
+                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.yourself }}</p>
+                <button
+                  class="btn btn-sm btn-outline-danger mt-2"
+                  @click.stop="errorCards.yourself = null"
+                >
+                  Dismiss
+                </button>
+              </div>
+
+              <!-- Loading State -->
+              <div v-else-if="loadingCards.yourself" class="card-loading-overlay">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <p class="nav-text text-muted mb-0">Loading image...</p>
+              </div>
+
+              <!-- Selected Image -->
               <img
-                v-if="selections.yourself"
+                v-else-if="selections.yourself"
                 :src="selections.yourself.base64"
                 alt="Selected yourself image"
               />
+
+              <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
                 <i class="bi bi-cursor-fill me-2"></i>Click to select
               </p>
@@ -31,12 +55,36 @@
             <h3 class="card-title mb-3 text-center">
               <i class="bi bi-tencent-qq me-2"></i>Clothing
             </h3>
-            <div class="selection-card" @click="openModal('clothing')">
+            <div
+              class="selection-card"
+              @click="!loadingCards.clothing && !errorCards.clothing && openModal('clothing')"
+            >
+              <!-- Error State -->
+              <div v-if="errorCards.clothing" class="card-error-overlay">
+                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
+                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.clothing }}</p>
+                <button
+                  class="btn btn-sm btn-outline-danger mt-2"
+                  @click.stop="errorCards.clothing = null"
+                >
+                  Dismiss
+                </button>
+              </div>
+
+              <!-- Loading State -->
+              <div v-else-if="loadingCards.clothing" class="card-loading-overlay">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <p class="nav-text text-muted mb-0">Loading image...</p>
+              </div>
+
+              <!-- Selected Image -->
               <img
-                v-if="selections.clothing"
+                v-else-if="selections.clothing"
                 :src="selections.clothing.base64"
                 alt="Selected clothing image"
               />
+
+              <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
                 <i class="bi bi-cursor-fill me-2"></i>Click to select
               </p>
@@ -50,12 +98,36 @@
         <div class="card h-100">
           <div class="card-body d-flex flex-column">
             <h3 class="card-title mb-3 text-center"><i class="bi bi-star-fill me-2"></i>Style</h3>
-            <div class="selection-card" @click="openModal('style')">
+            <div
+              class="selection-card"
+              @click="!loadingCards.style && !errorCards.style && openModal('style')"
+            >
+              <!-- Error State -->
+              <div v-if="errorCards.style" class="card-error-overlay">
+                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
+                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.style }}</p>
+                <button
+                  class="btn btn-sm btn-outline-danger mt-2"
+                  @click.stop="errorCards.style = null"
+                >
+                  Dismiss
+                </button>
+              </div>
+
+              <!-- Loading State -->
+              <div v-else-if="loadingCards.style" class="card-loading-overlay">
+                <div class="spinner-border text-primary mb-2" role="status"></div>
+                <p class="nav-text text-muted mb-0">Loading image...</p>
+              </div>
+
+              <!-- Selected Image -->
               <img
-                v-if="selections.style"
+                v-else-if="selections.style"
                 :src="selections.style.base64"
                 alt="Selected style image"
               />
+
+              <!-- Placeholder -->
               <p v-else class="nav-text text-muted">
                 <i class="bi bi-cursor-fill me-2"></i>Click to select
               </p>
@@ -163,6 +235,11 @@ export default {
         clothing: false,
         style: false,
       },
+      errorCards: {
+        yourself: null,
+        clothing: null,
+        style: null,
+      },
     }
   },
   computed: {
@@ -203,15 +280,37 @@ export default {
     },
     async confirmSelection() {
       if (!this.selectedImageId || !this.modalCategory) return
+
+      this.showModal = false
       this.loadingCards[this.modalCategory] = true
-      const userId = window.APP_CONFIG.userId
-      const fullImage = await getFullImage(userId, this.selectedImageId)
 
-      if (fullImage) {
-        this.selections[this.modalCategory] = fullImage
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await getFullImage(userId, this.selectedImageId)
+
+        if (result.success) {
+          this.selections[this.modalCategory] = {
+            id: this.selectedImageId,
+            base64: `data:image/jpeg;base64,${result.data.image_base64}`,
+          }
+          this.loadingCards[this.modalCategory] = false
+        } else {
+          // API returned success: false
+          this.loadingCards[this.modalCategory] = false
+          this.showError(this.modalCategory, result.error || 'Failed to load image')
+        }
+      } catch (error) {
+        // Network or unexpected error
+        this.loadingCards[this.modalCategory] = false
+        this.showError(this.modalCategory, 'Network error. Please try again.')
       }
-
-      this.closeModal()
+    },
+    showError(category, message) {
+      this.errorCards[category] = message
+      // Auto-clear error after 5 seconds
+      setTimeout(() => {
+        this.errorCards[category] = null
+      }, 5000)
     },
   },
 }

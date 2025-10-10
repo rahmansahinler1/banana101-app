@@ -503,6 +503,31 @@
   z-index: 10;
 }
 
+/* Card Loading & Error Overlays */
+.card-loading-overlay,
+.card-error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border-radius: 1rem;
+}
+
+.card-loading-overlay {
+  cursor: wait;
+}
+
+.card-error-overlay {
+  cursor: default;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .app-sidebar {
