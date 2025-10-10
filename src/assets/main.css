@@ -479,6 +479,30 @@
   gap: 0.25rem;
 }
 
+/* Selection Modal Styles */
+.gallery-item.selected {
+  border: 3px solid #0d6efd;
+  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.3);
+  transform: translateY(-4px);
+}
+
+.selection-checkmark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: #0d6efd;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .app-sidebar {
