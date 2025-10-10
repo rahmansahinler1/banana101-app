@@ -2,140 +2,138 @@
   <div class="container-fluid h-100 d-flex flex-column">
     <h1 class="dashboard-title mb-3 text-center">Create Your Outfit</h1>
 
-    <div class="row flex-grow-1 align-items-center">
-      <!-- Yourself -->
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h3 class="card-title mb-3 text-center">
-              <i class="bi bi-person-fill me-2"></i>Yourself
-            </h3>
-            <div
-              class="selection-card"
-              :class="{ disabled: loadingCards.yourself || errorCards.yourself }"
-              @click="!loadingCards.yourself && !errorCards.yourself && openModal('yourself')"
+    <div class="row h-100 align-items-center justify-content-center px-3 gx-3">
+      <!-- Yourself Card -->
+      <div class="col-auto">
+        <h3 class="card-title mb-3 text-center"><i class="bi bi-person-fill me-2"></i>Yourself</h3>
+        <div
+          class="selection-card"
+          :class="{ disabled: loadingCards.yourself || errorCards.yourself }"
+          @click="!loadingCards.yourself && !errorCards.yourself && openModal('yourself')"
+        >
+          <!-- Error State -->
+          <div v-if="errorCards.yourself" class="card-error-overlay">
+            <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
+            <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.yourself }}</p>
+            <button
+              class="btn btn-sm btn-outline-danger mt-2"
+              @click.stop="dismissError('yourself')"
             >
-              <!-- Error State -->
-              <div v-if="errorCards.yourself" class="card-error-overlay">
-                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
-                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.yourself }}</p>
-                <button
-                  class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="dismissError('yourself')"
-                >
-                  Dismiss
-                </button>
-              </div>
-
-              <!-- Loading State -->
-              <div v-else-if="loadingCards.yourself" class="card-loading-overlay">
-                <div class="spinner-border text-primary mb-2" role="status"></div>
-                <p class="nav-text text-muted mb-0">Loading image...</p>
-              </div>
-
-              <!-- Selected Image -->
-              <img
-                v-else-if="selections.yourself"
-                :src="selections.yourself.base64"
-                alt="Selected yourself image"
-              />
-
-              <!-- Placeholder -->
-              <p v-else class="nav-text text-muted">
-                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
-              </p>
-            </div>
+              Dismiss
+            </button>
           </div>
+
+          <!-- Loading State -->
+          <div v-else-if="loadingCards.yourself" class="card-loading-overlay">
+            <div class="spinner-border text-primary mb-2" role="status"></div>
+            <p class="nav-text text-muted mb-0">Loading image...</p>
+          </div>
+
+          <!-- Selected Image -->
+          <img
+            v-else-if="selections.yourself"
+            :src="selections.yourself.base64"
+            alt="Selected yourself image"
+          />
+
+          <!-- Placeholder -->
+          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-2"></i>Click to select</p>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            :disabled="!selections.yourself"
+            @click="openModal('yourself')"
+          >
+            <i class="bi bi-arrow-clockwise me-2"></i> Replace
+          </button>
         </div>
       </div>
 
-      <!-- Clothing -->
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h3 class="card-title mb-3 text-center">
-              <i class="bi bi-tencent-qq me-2"></i>Clothing
-            </h3>
-            <div
-              class="selection-card"
-              :class="{ disabled: loadingCards.clothing || errorCards.clothing }"
-              @click="!loadingCards.clothing && !errorCards.clothing && openModal('clothing')"
+      <!-- Plus Icon -->
+      <div class="col-auto d-flex align-items-center" style="margin-top: 3rem">
+        <img src="/assets/img/ic_swap_add.svg" alt="plus" class="separator-icon" />
+      </div>
+
+      <!-- Clothing Card -->
+      <div class="col-auto">
+        <h3 class="card-title mb-3 text-center"><i class="bi bi-tencent-qq me-2"></i>Clothing</h3>
+        <div
+          class="selection-card"
+          :class="{ disabled: loadingCards.clothing || errorCards.clothing }"
+          @click="!loadingCards.clothing && !errorCards.clothing && openModal('clothing')"
+        >
+          <!-- Error State -->
+          <div v-if="errorCards.clothing" class="card-error-overlay">
+            <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
+            <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.clothing }}</p>
+            <button
+              class="btn btn-sm btn-outline-danger mt-2"
+              @click.stop="dismissError('clothing')"
             >
-              <!-- Error State -->
-              <div v-if="errorCards.clothing" class="card-error-overlay">
-                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
-                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.clothing }}</p>
-                <button
-                  class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="dismissError('clothing')"
-                >
-                  Dismiss
-                </button>
-              </div>
-
-              <!-- Loading State -->
-              <div v-else-if="loadingCards.clothing" class="card-loading-overlay">
-                <div class="spinner-border text-primary mb-2" role="status"></div>
-                <p class="nav-text text-muted mb-0">Loading image...</p>
-              </div>
-
-              <!-- Selected Image -->
-              <img
-                v-else-if="selections.clothing"
-                :src="selections.clothing.base64"
-                alt="Selected clothing image"
-              />
-
-              <!-- Placeholder -->
-              <p v-else class="nav-text text-muted">
-                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
-              </p>
-            </div>
+              Dismiss
+            </button>
           </div>
+
+          <!-- Loading State -->
+          <div v-else-if="loadingCards.clothing" class="card-loading-overlay">
+            <div class="spinner-border text-primary mb-2" role="status"></div>
+            <p class="nav-text text-muted mb-0">Loading image...</p>
+          </div>
+
+          <!-- Selected Image -->
+          <img
+            v-else-if="selections.clothing"
+            :src="selections.clothing.base64"
+            alt="Selected clothing image"
+          />
+
+          <!-- Placeholder -->
+          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-2"></i>Click to select</p>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            :disabled="!selections.clothing"
+            @click="openModal('clothing')"
+          >
+            <i class="bi bi-arrow-clockwise me-2"></i> Replace
+          </button>
         </div>
       </div>
 
-      <!-- Style -->
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h3 class="card-title mb-3 text-center"><i class="bi bi-star-fill me-2"></i>Style</h3>
-            <div
-              class="selection-card"
-              :class="{ disabled: loadingCards.style || errorCards.style }"
-              @click="!loadingCards.style && !errorCards.style && openModal('style')"
-            >
-              <!-- Error State -->
-              <div v-if="errorCards.style" class="card-error-overlay">
-                <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem"></i>
-                <p class="nav-text text-danger mb-0 mt-2">{{ errorCards.style }}</p>
-                <button
-                  class="btn btn-sm btn-outline-danger mt-2"
-                  @click.stop="dismissError('style')"
-                >
-                  Dismiss
-                </button>
-              </div>
+      <!-- Result Arrow Icon -->
+      <div class="col-auto d-flex align-items-center" style="margin-top: 3rem">
+        <img src="/assets/img/ic_swap_result.svg" alt="result" class="separator-icon" />
+      </div>
 
-              <!-- Loading State -->
-              <div v-else-if="loadingCards.style" class="card-loading-overlay">
-                <div class="spinner-border text-primary mb-2" role="status"></div>
-                <p class="nav-text text-muted mb-0">Loading image...</p>
-              </div>
-
-              <!-- Selected Image -->
-              <img
-                v-else-if="selections.style"
-                :src="selections.style.base64"
-                alt="Selected style image"
-              />
-
-              <!-- Placeholder -->
-              <p v-else class="nav-text text-muted">
-                <i class="bi bi-hand-index-thumb me-2"></i>Click to select
-              </p>
-            </div>
+      <!-- Generated Result Card -->
+      <div class="col-auto">
+        <h3 class="card-title mb-3 text-center"><i class="bi bi-camera-fill me-2"></i>Result</h3>
+        <div
+          class="selection-card"
+          :class="{ clickable: generatedImage }"
+          @click="generatedImage && openGeneratedImageModal()"
+        >
+          <!-- Generating State -->
+          <div v-if="isGenerating" class="card-loading-overlay">
+            <div class="spinner-border text-primary mb-2" role="status"></div>
           </div>
+
+          <!-- Generated Image -->
+          <img v-else-if="generatedImage" :src="generatedImage" alt="Generated result" />
+
+          <!-- Placeholder -->
+          <p v-else class="nav-text">Click "Generate" button</p>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            :disabled="!generatedImage"
+            @click="downloadGeneratedImage"
+          >
+            <i class="bi bi-download me-2"></i> Download
+          </button>
         </div>
       </div>
     </div>
@@ -143,7 +141,7 @@
     <!-- Generate Button -->
     <div class="row">
       <div class="col-12 text-center mb-4">
-        <button class="generate-btn" @click="generateImage">
+        <button class="generate-btn" :class="{ 'generate-btn-active': canGenerate }" @click="generateImage">
           <span>Generate</span>
           <span><i class="bi bi-magic"></i> 20</span>
         </button>
@@ -187,6 +185,17 @@
                   <img :src="image.base64" :alt="modalCategory" />
                 </div>
               </div>
+              <!-- Upload button -->
+              <div class="gallery-item">
+                <div class="gallery-image-wrapper">
+                  <div class="gallery-upload-content">
+                    <i
+                      class="bi bi-plus-circle-fill gallery-upload-icon"
+                      @click="this.$router.push('/upload')"
+                    ></i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -209,6 +218,48 @@
     </div>
     <!-- Modal Backdrop -->
     <div v-if="showModal" class="modal-backdrop fade show"></div>
+
+    <!-- Generated Image Modal -->
+    <div
+      class="modal fade"
+      :class="{ show: showGeneratedModal, 'd-block': showGeneratedModal }"
+      tabindex="-1"
+      v-if="showGeneratedModal"
+      @click.self="closeGeneratedModal"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title">Generated Image</h5>
+            <button type="button" class="btn-close" @click="closeGeneratedModal"></button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="modal-body text-center">
+            <img
+              v-if="generatedImage"
+              :src="generatedImage"
+              alt="Generated outfit"
+              class="img-fluid"
+              style="max-height: 70vh"
+            />
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-secondary" @click="closeGeneratedModal">
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" disabled>
+              <i class="bi bi-download me-2"></i>Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Generated Modal Backdrop -->
+    <div v-if="showGeneratedModal" class="modal-backdrop fade show"></div>
   </div>
 </template>
 
@@ -227,42 +278,39 @@ export default {
       selections: {
         yourself: null,
         clothing: null,
-        style: null,
       },
       loadingCards: {
         yourself: false,
         clothing: false,
-        style: false,
       },
       errorCards: {
         yourself: null,
         clothing: null,
-        style: null,
       },
       errorTimeouts: {
         yourself: null,
         clothing: null,
-        style: null,
       },
       pendingRequests: {
         yourself: null,
         clothing: null,
-        style: null,
       },
+      showGeneratedModal: false,
+      generatedImage: null,
+      isGenerating: false,
     }
   },
   computed: {
     ...mapStores(useUserStore),
+    canGenerate() {
+      return this.selections.yourself && this.selections.clothing && !this.isGenerating
+    },
     filteredImages() {
       if (!this.modalCategory) return []
 
       if (this.modalCategory === 'yourself') {
         return this.userStore?.previewImages?.yourself || []
       } else if (this.modalCategory === 'clothing') {
-        return this.userStore?.previewImages?.clothing || []
-      } else if (this.modalCategory === 'style') {
-        // For now, use clothing images for style
-        // Can be updated later to use style presets
         return this.userStore?.previewImages?.clothing || []
       }
 
@@ -364,19 +412,37 @@ export default {
       }
     },
     async generateImage() {
-      if (!this.selections.yourself || !this.selections.clothing || !this.selections.style) return
-      const userId = window.APP_CONFIG.userId
-      const result = await generateImage(
-        userId,
-        this.selections.yourself.id,
-        this.selections.clothing.id,
-        'daily',
-      )
+      if (!this.selections.yourself || !this.selections.clothing) return
 
-      if (result.success) {
-        // generate image
-        return
+      this.isGenerating = true
+
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await generateImage(
+          userId,
+          this.selections.yourself.id,
+          this.selections.clothing.id,
+          'daily',
+        )
+
+        if (result.success) {
+          this.generatedImage = `data:image/jpeg;base64,${result.data.image_base64}`
+        } else {
+          alert(`Generation failed: ${result.error || 'Unknown error'}`)
+        }
+      } catch (error) {
+        alert(`Generation error: ${error.message}`)
+      } finally {
+        this.isGenerating = false
       }
+    },
+    openGeneratedImageModal() {
+      if (this.generatedImage) {
+        this.showGeneratedModal = true
+      }
+    },
+    closeGeneratedModal() {
+      this.showGeneratedModal = false
     },
   },
   mounted() {
