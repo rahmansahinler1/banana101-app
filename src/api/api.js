@@ -114,14 +114,14 @@ export const getFullImage = async function (userId, imageId) {
   }
 }
 
-export const uploadFile = async function (userId, category, fileBytes) {
+export const uploadImage = async function (userId, category, imageBytes) {
   try {
-    const response = await fetch(`${API_BASE_URL}/upload_file`, {
+    const response = await fetch(`${API_BASE_URL}/upload_image`, {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,
         category: category,
-        fileBytes: fileBytes,
+        imageBytes: imageBytes,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export const deleteImage = async function (userId, imageId) {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,
-        picture_id: imageId,
+        image_id: imageId,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -177,34 +177,35 @@ export const deleteImage = async function (userId, imageId) {
   }
 }
 
-// Sample code for correct backend api call
-window.selectDomain = async function selectDomain(domainId, userID) {
+export const generateImage = async function (userId, yourselfImageId, clothingImageId, style) {
   try {
-    const url = `/api/v1/qa/select_domain?userID=${encodeURIComponent(userID)}`
-
-    const response = await fetch(url, {
+    const response = await fetch(`${API_BASE_URL}/generate_image`, {
       method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        yourself_image_id: yourselfImageId,
+        clothing_image_id: clothingImageId,
+        style: style,
+      }),
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        domain_id: domainId,
-      }),
     })
 
     if (!response.ok) {
-      return 0
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
     const data = await response.json()
-
-    if (data['message'] !== 'success') {
-      return 0
+    return {
+      success: true,
+      data: data,
     }
-
-    return 1
   } catch (error) {
-    console.error('Error selecting domain', error)
-    return 0
+    console.error('Failed to fetch full image:', error)
+    return {
+      success: false,
+      error: error.message,
+    }
   }
 }

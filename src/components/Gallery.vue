@@ -15,7 +15,7 @@
                 @click="selectFilter('all')"
               >
                 All
-                <span class="badge bg-light text-dark ms-1">{{ userStore.pictureCounts.all }}</span>
+                <span class="badge bg-light text-dark ms-1">{{ userStore.imageCounts.all }}</span>
               </button>
               <button
                 class="btn btn-sm me-2"
@@ -26,7 +26,7 @@
               >
                 Yourself
                 <span class="badge bg-light text-dark ms-1">{{
-                  userStore.pictureCounts.yourself
+                  userStore.imageCounts.yourself
                 }}</span>
               </button>
               <button
@@ -38,7 +38,7 @@
               >
                 Clothing
                 <span class="badge bg-light text-dark ms-1">{{
-                  userStore.pictureCounts.clothing
+                  userStore.imageCounts.clothing
                 }}</span>
               </button>
             </div>

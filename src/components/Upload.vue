@@ -16,7 +16,7 @@
               @drop.prevent="handleDrop"
             >
               <i class="bi bi-bag-plus" style="font-size: 3rem; color: #5d5d5d"></i>
-              <h5>Drag and drop your picture here</h5>
+              <h5>Drag and drop your picture in here</h5>
               <p class="nav-text text-muted">or click to browse files</p>
               <button class="btn btn-outline-primary">Browse Files</button>
               <input
@@ -122,11 +122,11 @@
               <div class="upload-summary">
                 <div class="d-flex justify-content-between">
                   <span class="nav-text text-muted">Yourself:</span>
-                  <span class="nav-text fw-semibold">{{ userStore.pictureCounts.yourself }}</span>
+                  <span class="nav-text fw-semibold">{{ userStore.imageCounts.yourself }}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                   <span class="nav-text text-muted">Clothes:</span>
-                  <span class="nav-text fw-semibold">{{ userStore.pictureCounts.clothing }}</span>
+                  <span class="nav-text fw-semibold">{{ userStore.imageCounts.clothing }}</span>
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import { uploadFile } from '@/api/api'
+import { uploadImage } from '@/api/api'
 import { mapStores } from 'pinia'
 import useUserStore from '@/stores/user'
 
@@ -218,7 +218,7 @@ export default {
       try {
         const fileBytes = await this.convertFile(this.selectedFile)
         const userId = window.APP_CONFIG.userId
-        const result = await uploadFile(userId, this.selectedCategory, fileBytes)
+        const result = await uploadImage(userId, this.selectedCategory, fileBytes)
 
         if (result.success) {
           this.uploadStatus = 'success'

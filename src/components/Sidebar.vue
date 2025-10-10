@@ -8,7 +8,7 @@
     </div>
     <!-- Navigation Sections -->
     <div class="flex-grow-1">
-      <!-- Picture Section -->
+      <!-- Image Section -->
       <div class="nav-section">
         <h6 class="section-title text mb-2">Dress Up</h6>
 

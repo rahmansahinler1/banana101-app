@@ -143,7 +143,7 @@
     <!-- Generate Button -->
     <div class="row">
       <div class="col-12 text-center mb-4">
-        <button class="generate-btn">
+        <button class="generate-btn" @click="generateImage">
           <span>Generate</span>
           <span><i class="bi bi-magic"></i> 20</span>
         </button>
@@ -215,7 +215,7 @@
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
-import { getFullImage } from '@/api/api'
+import { getFullImage, generateImage } from '@/api/api'
 
 export default {
   name: 'Design',
@@ -361,6 +361,21 @@ export default {
     handleEscape(event) {
       if (event.key === 'Escape' && this.showModal) {
         this.closeModal()
+      }
+    },
+    async generateImage() {
+      if (!this.selections.yourself || !this.selections.clothing || !this.selections.style) return
+      const userId = window.APP_CONFIG.userId
+      const result = await generateImage(
+        userId,
+        this.selections.yourself.id,
+        this.selections.clothing.id,
+        'daily',
+      )
+
+      if (result.success) {
+        // generate image
+        return
       }
     },
   },

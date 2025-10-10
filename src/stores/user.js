@@ -8,7 +8,7 @@ export default defineStore('user', {
     previewImages: { yourself: [], clothing: [] },
   }),
   getters: {
-    pictureCounts(state) {
+    imageCounts(state) {
       return {
         yourself: state.previewImages.yourself.length,
         clothing: state.previewImages.clothing.length,
@@ -48,14 +48,14 @@ export default defineStore('user', {
     },
     addPreviewImage(category, imageData) {
       this.previewImages[category].push({
-        id: imageData.picture_id,
+        id: imageData.image_id,
         base64: `data:image/jpeg;base64,${imageData.preview_base64}`,
         created_at: imageData.created_at,
       })
     },
     removePreviewImage(category, imageId) {
       this.previewImages[category] = this.previewImages[category].filter(
-        (img) => img.id !== imageId
+        (img) => img.id !== imageId,
       )
     },
   },
