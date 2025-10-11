@@ -199,7 +199,37 @@ export const updateFav = async function (userId, imageId) {
       success: true,
     }
   } catch (error) {
-    console.error('Failed to delete image: ', error)
+    console.error('Failed to update fav: ', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}
+
+export const updateImageFav = async function (userId, imageId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/update_image_fav`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        image_id: imageId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+    }
+  } catch (error) {
+    console.error('Failed to update image fav: ', error)
     return {
       success: false,
       error: error.message,

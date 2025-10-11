@@ -276,7 +276,7 @@
 .gallery-category-badge {
   position: absolute;
   top: 0.5rem;
-  right: 0.5rem;
+  left: 0.5rem;
   background-color: rgba(255, 255, 255, 0.9);
   color: #5d5d5d;
   padding: 0.25rem 0.5rem;

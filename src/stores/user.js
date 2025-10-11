@@ -34,12 +34,14 @@ export default defineStore('user', {
           this.previewImages.yourself = (image_previews.yourself || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
+            faved: img.faved,
             created_at: img.created_at,
           }))
 
           this.previewImages.clothing = (image_previews.clothing || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
+            faved: img.faved,
             created_at: img.created_at,
           }))
 

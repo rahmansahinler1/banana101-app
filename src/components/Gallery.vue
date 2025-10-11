@@ -15,7 +15,7 @@
                 @click="selectFilter('all')"
               >
                 All
-                <span class="badge bg-light text-dark ms-1">{{ userStore.imageCounts.all }}</span>
+                <span class="badge bg-light text-dark ms-1">{{ imageCounts.all }}</span>
               </button>
               <button
                 class="btn btn-sm me-2"
@@ -25,9 +25,7 @@
                 @click="selectFilter('yourself')"
               >
                 Yourself
-                <span class="badge bg-light text-dark ms-1">{{
-                  userStore.imageCounts.yourself
-                }}</span>
+                <span class="badge bg-light text-dark ms-1">{{ imageCounts.yourself }}</span>
               </button>
               <button
                 class="btn btn-sm me-2"
@@ -37,9 +35,17 @@
                 @click="selectFilter('clothing')"
               >
                 Clothing
-                <span class="badge bg-light text-dark ms-1">{{
-                  userStore.imageCounts.clothing
-                }}</span>
+                <span class="badge bg-light text-dark ms-1">{{ imageCounts.clothing }}</span>
+              </button>
+              <button
+                class="btn btn-sm me-2"
+                :class="
+                  this.selectedFilter === 'favorites' ? 'btn-secondary' : 'btn-outline-secondary'
+                "
+                @click="selectFilter('favorites')"
+              >
+                Favorites
+                <span class="badge bg-light text-dark ms-1">{{ imageCounts.favorites }}</span>
               </button>
             </div>
 
@@ -48,6 +54,13 @@
               <!-- Gallery items will go here -->
               <div class="gallery-item" v-for="image in getPreviewImages" :key="image.id">
                 <div class="gallery-image-wrapper">
+                  <!-- Like Button Badge -->
+                  <button class="gallery-like-badge" @click.stop="toggleImageFav(image)">
+                    <i
+                      :class="image.faved ? 'bi bi-heart-fill' : 'bi bi-heart'"
+                      :style="{ color: image.faved ? '#dc3545' : 'white' }"
+                    ></i>
+                  </button>
                   <!-- Category Badge -->
                   <span class="gallery-category-badge">{{ image.category }}</span>
                   <!-- Image -->
@@ -72,8 +85,11 @@
 
                   <!-- Normal buttons -->
                   <template v-else>
-                    <button class="btn btn-sm gallery-action-btn">
-                      <i class="bi bi-stars"></i>
+                    <button class="btn btn-sm gallery-action-btn" @click="toggleImageFav(image)">
+                      <i
+                        :class="image.faved ? 'bi bi-heart-fill' : 'bi bi-heart'"
+                        :style="{ color: image.faved ? '#dc3545' : 'inherit' }"
+                      ></i>
                     </button>
                     <button
                       class="btn btn-sm gallery-action-btn"
@@ -106,7 +122,7 @@
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
-import { deleteImage } from '@/api/api'
+import { deleteImage, updateImageFav } from '@/api/api'
 
 export default {
   name: 'Gallery',
@@ -131,6 +147,11 @@ export default {
         images = yourself.map((img) => ({ ...img, category: 'Yourself' }))
       } else if (this.selectedFilter === 'clothing') {
         images = clothing.map((img) => ({ ...img, category: 'Clothing' }))
+      } else if (this.selectedFilter === 'favorites') {
+        images = [
+          ...yourself.filter((img) => img.faved).map((img) => ({ ...img, category: 'Yourself' })),
+          ...clothing.filter((img) => img.faved).map((img) => ({ ...img, category: 'Clothing' })),
+        ]
       } else {
         images = [
           ...yourself.map((img) => ({ ...img, category: 'Yourself' })),
@@ -141,6 +162,18 @@ export default {
       return images.sort((a, b) => {
         return new Date(b.created_at) - new Date(a.created_at)
       })
+    },
+    imageCounts() {
+      const yourself = this.userStore?.previewImages?.yourself || []
+      const clothing = this.userStore?.previewImages?.clothing || []
+
+      return {
+        yourself: yourself.length,
+        clothing: clothing.length,
+        all: yourself.length + clothing.length,
+        favorites:
+          yourself.filter((img) => img.faved).length + clothing.filter((img) => img.faved).length,
+      }
     },
   },
   methods: {
@@ -168,6 +201,33 @@ export default {
       } catch (error) {
         console.error('Delete error:', error)
         alert('Error deleting image')
+      }
+    },
+    async toggleImageFav(image) {
+      // Find the image in store
+      const category = image.category.toLowerCase()
+      const imageInStore = this.userStore.previewImages[category].find((img) => img.id === image.id)
+      if (!imageInStore) return
+
+      // Optimistic update - toggle immediately in UI
+      const previousState = imageInStore.faved
+      imageInStore.faved = !imageInStore.faved
+
+      // Update backend
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await updateImageFav(userId, image.id)
+
+        if (!result.success) {
+          // Revert on failure
+          imageInStore.faved = previousState
+          alert('Failed to update favorite')
+        }
+      } catch (error) {
+        // Revert on error
+        imageInStore.faved = previousState
+        console.error('Error updating favorite:', error)
+        alert('Error updating favorite')
       }
     },
   },
