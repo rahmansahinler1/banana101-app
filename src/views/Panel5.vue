@@ -2,20 +2,20 @@
   <div class="app-container">
     <Sidebar />
     <div class="app-content">
-      <Usage />
+      <Profile />
     </div>
   </div>
 </template>
 
 <script>
 import Sidebar from '@/components/Sidebar.vue'
-import Usage from '@/components/Usage.vue'
+import Profile from '@/components/Profile.vue'
 
 export default {
   name: 'Panel5',
   components: {
     Sidebar,
-    Usage,
+    Profile,
   },
 }
 </script>

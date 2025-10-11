@@ -32,7 +32,7 @@ const routes = [
   },
   {
     name: 'Panel5',
-    path: '/usage',
+    path: '/profile',
     component: Panel5,
   },
 ]
