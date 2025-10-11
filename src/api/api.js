@@ -114,6 +114,37 @@ export const getFullImage = async function (userId, imageId) {
   }
 }
 
+export const getFullGeneratedImage = async function (userId, imageId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get_full_generated_image`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        image_id: imageId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+      data: data,
+    }
+  } catch (error) {
+    console.error('Failed to fetch full generated image:', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}
+
 export const uploadImage = async function (userId, category, imageBytes) {
   try {
     const response = await fetch(`${API_BASE_URL}/upload_image`, {
