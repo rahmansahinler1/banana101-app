@@ -177,6 +177,37 @@ export const deleteImage = async function (userId, imageId) {
   }
 }
 
+export const deleteGeneration = async function (userId, imageId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/delete_generated_image`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        image_id: imageId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+      data: data,
+    }
+  } catch (error) {
+    console.error('Failed to delete image: ', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}
+
 export const generateImage = async function (userId, yourselfImageId, clothingImageId) {
   try {
     const response = await fetch(`${API_BASE_URL}/generate_image`, {

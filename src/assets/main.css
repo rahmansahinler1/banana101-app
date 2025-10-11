@@ -202,7 +202,7 @@
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   padding-bottom: 2rem;
 }
@@ -484,7 +484,8 @@
 
 /* Generate Button Active Animation */
 @keyframes hop {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -493,7 +494,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(0, 183, 237, 0.7);
   }
   50% {
@@ -502,7 +504,9 @@
 }
 
 .generate-btn-active {
-  animation: hop 1s ease-in-out infinite, pulse-glow 1.5s ease-in-out infinite;
+  animation:
+    hop 1s ease-in-out infinite,
+    pulse-glow 1.5s ease-in-out infinite;
 }
 
 .generate-btn span:last-child {

@@ -1,112 +1,65 @@
 <template>
   <!-- Recent Generations Page -->
-  <div id="recent-generations" class="page-content">
-    <div class="container-fluid">
-      <h1 class="dashboard-title mb-3">Recent Generations</h1>
-      <p class="nav-text text-muted">
-        View and manage your previously generated AI outfit combinations.
-      </p>
+  <div class="container-fluid">
+    <h1 class="dashboard-title mb-3 text-center">Recent Generations</h1>
 
-      <div class="row">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="card-title">Generated Outfits</h3>
-                <div class="filter-controls">
-                  <button class="btn btn-sm btn-outline-secondary me-2">All</button>
-                  <button class="btn btn-sm btn-outline-secondary me-2">Favorites</button>
-                  <button class="btn btn-sm btn-outline-secondary">Recent</button>
-                </div>
-              </div>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div class="card" style="min-height: 85vh">
+          <div class="card-body">
+            <!-- Empty State -->
+            <div v-if="getGenerationPreviews.length === 0" class="text-center py-5">
+              <i class="bi bi-images" style="font-size: 4rem; color: #5d5d5d"></i>
+              <p class="nav-text text-muted mt-3">No generated outfits yet</p>
+              <p class="nav-text text-muted">
+                Create your first outfit in the <router-link to="/design">Design</router-link> page
+              </p>
+            </div>
 
-              <div class="generations-grid">
-                <div class="generation-item">
-                  <div class="generation-image">
-                    <div class="result-placeholder">
-                      <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
-                    </div>
-                  </div>
-                  <div class="generation-info">
-                    <small class="nav-text text-muted">Generated 2 hours ago</small>
-                    <div class="generation-actions mt-1">
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-heart"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-download"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </div>
+            <!-- Gallery Grid -->
+            <div v-else class="gallery-grid">
+              <!-- Generation items -->
+              <div
+                class="gallery-item"
+                v-for="generation in getGenerationPreviews"
+                :key="generation.id"
+              >
+                <div class="gallery-image-wrapper">
+                  <!-- Image -->
+                  <div class="gallery-placeholder">
+                    <img :src="generation.base64" alt="Generated outfit" />
                   </div>
                 </div>
+                <!-- Action Buttons -->
+                <div class="gallery-actions">
+                  <!-- Show confirmation if this image is being deleted -->
+                  <template v-if="deleteConfirmId === generation.id">
+                    <button
+                      class="btn btn-sm gallery-action-btn"
+                      @click="deleteGeneration(generation.id)"
+                    >
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button class="btn btn-sm gallery-action-btn" @click="cancelDelete">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </template>
 
-                <div class="generation-item">
-                  <div class="generation-image">
-                    <div class="result-placeholder">
-                      <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
-                    </div>
-                  </div>
-                  <div class="generation-info">
-                    <small class="nav-text text-muted">Generated 1 day ago</small>
-                    <div class="generation-actions mt-1">
-                      <button class="btn btn-sm btn-primary me-1">
-                        <i class="bi bi-heart-fill"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-download"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="generation-item">
-                  <div class="generation-image">
-                    <div class="result-placeholder">
-                      <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
-                    </div>
-                  </div>
-                  <div class="generation-info">
-                    <small class="nav-text text-muted">Generated 3 days ago</small>
-                    <div class="generation-actions mt-1">
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-heart"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-download"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="generation-item">
-                  <div class="generation-image">
-                    <div class="result-placeholder">
-                      <i class="bi bi-image" style="font-size: 2rem; color: #5d5d5d"></i>
-                    </div>
-                  </div>
-                  <div class="generation-info">
-                    <small class="nav-text text-muted">Generated 1 week ago</small>
-                    <div class="generation-actions mt-1">
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-heart"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="bi bi-download"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </div>
-                  </div>
+                  <!-- Normal buttons -->
+                  <template v-else>
+                    <button
+                      class="btn btn-sm gallery-action-btn"
+                      @click="downloadGeneratedImage(generation.base64)"
+                    >
+                      <i class="bi bi-download"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm gallery-action-btn"
+                      @click="showDeleteConfirm(generation.id)"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </template>
                 </div>
               </div>
             </div>
@@ -118,7 +71,55 @@
 </template>
 
 <script>
+import useUserStore from '@/stores/user'
+import { mapStores } from 'pinia'
+import { deleteGeneration } from '@/api/api'
+
 export default {
   name: 'Recents',
+  data() {
+    return {
+      deleteConfirmId: null,
+    }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    getGenerationPreviews() {
+      return this.userStore?.previewGenerations || []
+    },
+  },
+  methods: {
+    showDeleteConfirm(imageId) {
+      this.deleteConfirmId = imageId
+    },
+    cancelDelete() {
+      this.deleteConfirmId = null
+    },
+    async deleteGeneration(imageId) {
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await deleteGeneration(userId, imageId)
+
+        if (result.success) {
+          // Remove from store
+          this.userStore.removePreviewGeneration(imageId)
+          this.deleteConfirmId = null
+        } else {
+          alert('Failed to delete image')
+        }
+      } catch (error) {
+        console.error('Delete error:', error)
+        alert('Error deleting image')
+      }
+    },
+    downloadGeneratedImage(imageBase64) {
+      const link = document.createElement('a')
+      link.href = imageBase64
+      link.download = `generated-outfit-${Date.now()}.jpg`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    },
+  },
 }
 </script>

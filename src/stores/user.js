@@ -28,18 +28,28 @@ export default defineStore('user', {
 
         const preview_fetch = await getPreviewImages(userId)
         if (preview_fetch.success) {
-          const previews = preview_fetch.data.previews
+          // Map and add data for images
+          const image_previews = preview_fetch.data.image_previews
 
-          // Map and add data URL prefix
-          this.previewImages.yourself = (previews.yourself || []).map((img) => ({
+          this.previewImages.yourself = (image_previews.yourself || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
             created_at: img.created_at,
           }))
 
-          this.previewImages.clothing = (previews.clothing || []).map((img) => ({
+          this.previewImages.clothing = (image_previews.clothing || []).map((img) => ({
             id: img.id,
             base64: `data:image/jpeg;base64,${img.base64}`,
+            created_at: img.created_at,
+          }))
+
+          // Map and add data for generations
+          const generation_previews = preview_fetch.data.generation_previews
+
+          this.previewGenerations = (generation_previews || []).map((img) => ({
+            id: img.id,
+            base64: `data:image/jpeg;base64,${img.base64}`,
+            faved: img.faved,
             created_at: img.created_at,
           }))
         }

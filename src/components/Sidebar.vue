@@ -26,11 +26,6 @@
           <i class="bi bi-clock-history nav-icon"></i>
           <span class="nav-text">Recents</span>
         </router-link>
-      </div>
-
-      <!-- Management Section -->
-      <div class="nav-section">
-        <h6 class="section-title text mb-2">Management</h6>
 
         <router-link to="/upload" class="nav-item">
           <i class="bi bi-person-plus nav-icon"></i>
@@ -38,8 +33,8 @@
         </router-link>
 
         <router-link to="/usage" class="nav-item">
-          <i class="bi bi-credit-card nav-icon"></i>
-          <span class="nav-text">Usage</span>
+          <i class="bi bi-person-vcard nav-icon"></i>
+          <span class="nav-text">Profile</span>
         </router-link>
       </div>
     </div>
