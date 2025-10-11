@@ -177,7 +177,7 @@ export const deleteImage = async function (userId, imageId) {
   }
 }
 
-export const generateImage = async function (userId, yourselfImageId, clothingImageId, style) {
+export const generateImage = async function (userId, yourselfImageId, clothingImageId) {
   try {
     const response = await fetch(`${API_BASE_URL}/generate_image`, {
       method: 'POST',
@@ -185,7 +185,6 @@ export const generateImage = async function (userId, yourselfImageId, clothingIm
         user_id: userId,
         yourself_image_id: yourselfImageId,
         clothing_image_id: clothingImageId,
-        style: style,
       }),
       headers: {
         'Content-Type': 'application/json',

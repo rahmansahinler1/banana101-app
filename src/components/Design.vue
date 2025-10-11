@@ -435,7 +435,6 @@ export default {
           userId,
           this.selections.yourself.id,
           this.selections.clothing.id,
-          'daily',
         )
 
         if (result.success) {
