@@ -25,6 +25,16 @@
                 :key="generation.id"
               >
                 <div class="gallery-image-wrapper">
+                  <!-- Like Button Badge -->
+                  <button
+                    class="gallery-like-badge"
+                    @click="toggleLike(generation.id)"
+                  >
+                    <i
+                      :class="generation.faved ? 'bi bi-heart-fill' : 'bi bi-heart'"
+                      :style="{ color: generation.faved ? '#dc3545' : 'white' }"
+                    ></i>
+                  </button>
                   <!-- Image -->
                   <div class="gallery-placeholder">
                     <img :src="generation.base64" alt="Generated outfit" />
@@ -49,9 +59,12 @@
                   <template v-else>
                     <button
                       class="btn btn-sm gallery-action-btn"
-                      @click="downloadGeneratedImage(generation.base64)"
+                      @click="toggleLike(generation.id)"
                     >
-                      <i class="bi bi-download"></i>
+                      <i
+                        :class="generation.faved ? 'bi bi-heart-fill' : 'bi bi-heart'"
+                        :style="{ color: generation.faved ? '#dc3545' : 'inherit' }"
+                      ></i>
                     </button>
                     <button
                       class="btn btn-sm gallery-action-btn"
@@ -73,7 +86,7 @@
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
-import { deleteGeneration } from '@/api/api'
+import { deleteGeneration, updateFav } from '@/api/api'
 
 export default {
   name: 'Recents',
@@ -112,13 +125,31 @@ export default {
         alert('Error deleting image')
       }
     },
-    downloadGeneratedImage(imageBase64) {
-      const link = document.createElement('a')
-      link.href = imageBase64
-      link.download = `generated-outfit-${Date.now()}.jpg`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+    async toggleLike(generationId) {
+      // Find the generation in store
+      const generation = this.userStore.previewGenerations.find((g) => g.id === generationId)
+      if (!generation) return
+
+      // Optimistic update - toggle immediately in UI
+      const previousState = generation.faved
+      generation.faved = !generation.faved
+
+      // Update backend
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await updateFav(userId, generationId)
+
+        if (!result.success) {
+          // Revert on failure
+          generation.faved = previousState
+          alert('Failed to update like')
+        }
+      } catch (error) {
+        // Revert on error
+        generation.faved = previousState
+        console.error('Error updating like:', error)
+        alert('Error updating like')
+      }
     },
   },
 }

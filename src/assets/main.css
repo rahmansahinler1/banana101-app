@@ -287,6 +287,23 @@
   text-transform: capitalize;
 }
 
+.gallery-like-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: transparent;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.gallery-like-badge:hover {
+  transform: scale(1.15);
+}
+
 .gallery-actions {
   position: absolute;
   bottom: 0;
