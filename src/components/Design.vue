@@ -8,8 +8,10 @@
         <h3 class="card-title mb-3 text-center"><i class="bi bi-person-fill me-2"></i>Yourself</h3>
         <div
           class="selection-card"
-          :class="{ disabled: loadingCards.yourself || errorCards.yourself }"
-          @click="!loadingCards.yourself && !errorCards.yourself && openModal('yourself')"
+          :class="{ disabled: loadingCards.yourself || errorCards.yourself || isGenerating }"
+          @click="
+            !loadingCards.yourself && !errorCards.yourself && !isGenerating && openModal('yourself')
+          "
         >
           <!-- Error State -->
           <div v-if="errorCards.yourself" class="card-error-overlay">
@@ -37,15 +39,15 @@
           />
 
           <!-- Placeholder -->
-          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-2"></i>Click to select</p>
+          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-1"></i>Click to select</p>
         </div>
         <div class="d-flex justify-content-center mt-3">
           <button
             class="btn btn-outline-secondary btn-sm"
-            :disabled="!selections.yourself"
+            :disabled="!selections.yourself || isGenerating"
             @click="openModal('yourself')"
           >
-            <i class="bi bi-arrow-clockwise me-2"></i> Replace
+            <i class="bi bi-arrow-clockwise me-1"></i> Replace
           </button>
         </div>
       </div>
@@ -60,8 +62,10 @@
         <h3 class="card-title mb-3 text-center"><i class="bi bi-tencent-qq me-2"></i>Clothing</h3>
         <div
           class="selection-card"
-          :class="{ disabled: loadingCards.clothing || errorCards.clothing }"
-          @click="!loadingCards.clothing && !errorCards.clothing && openModal('clothing')"
+          :class="{ disabled: loadingCards.clothing || errorCards.clothing || isGenerating }"
+          @click="
+            !loadingCards.clothing && !errorCards.clothing && !isGenerating && openModal('clothing')
+          "
         >
           <!-- Error State -->
           <div v-if="errorCards.clothing" class="card-error-overlay">
@@ -89,15 +93,15 @@
           />
 
           <!-- Placeholder -->
-          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-2"></i>Click to select</p>
+          <p v-else class="nav-text"><i class="bi bi-hand-index-thumb me-1"></i>Click to select</p>
         </div>
         <div class="d-flex justify-content-center mt-3">
           <button
             class="btn btn-outline-secondary btn-sm"
-            :disabled="!selections.clothing"
+            :disabled="!selections.clothing || isGenerating"
             @click="openModal('clothing')"
           >
-            <i class="bi bi-arrow-clockwise me-2"></i> Replace
+            <i class="bi bi-arrow-clockwise me-1"></i> Replace
           </button>
         </div>
       </div>
@@ -109,7 +113,7 @@
 
       <!-- Generated Result Card -->
       <div class="col-auto">
-        <h3 class="card-title mb-3 text-center"><i class="bi bi-camera-fill me-2"></i>Result</h3>
+        <h3 class="card-title mb-3 text-center"><i class="bi bi-camera-fill me-1"></i>Result</h3>
         <div
           class="selection-card"
           :class="{ clickable: generatedImage }"
@@ -123,9 +127,16 @@
           <!-- Generated Image -->
           <img v-else-if="generatedImage" :src="generatedImage" alt="Generated result" />
 
-          <!-- Placeholder -->
-          <p v-else class="nav-text">Click "Generate" button</p>
+          <!-- Select Pictures condition -->
+          <p v-else-if="!canGenerate" class="nav-text">
+            <i class="bi bi-arrow-left-circle-fill me-1"></i>Select Pictures
+          </p>
+
+          <!-- Can generate trigger -->
+          <p v-else class="nav-text"><i class="bi bi-magic me-1"></i>Click Generate Button</p>
         </div>
+
+        <!-- Download button -->
         <div class="d-flex justify-content-center mt-3">
           <button
             class="btn btn-outline-secondary btn-sm"
@@ -141,7 +152,12 @@
     <!-- Generate Button -->
     <div class="row">
       <div class="col-12 text-center mb-4">
-        <button class="generate-btn" :class="{ 'generate-btn-active': canGenerate }" @click="generateImage">
+        <button
+          class="generate-btn"
+          :class="{ 'generate-btn-active': canGenerate }"
+          :disabled="!canGenerate"
+          @click="generateImage"
+        >
           <span>Generate</span>
           <span><i class="bi bi-magic"></i> 20</span>
         </button>
@@ -160,19 +176,16 @@
         <div class="modal-content">
           <!-- Modal Header -->
           <div class="modal-header">
-            <h5 class="modal-title">Select {{ modalCategory }}</h5>
+            <h5 class="modal-title">
+              {{ modalCategory === 'yourself' ? 'Select Your Picture' : 'Select Clothing Picture' }}
+            </h5>
             <button type="button" class="btn-close" @click="closeModal"></button>
           </div>
 
           <!-- Modal Body -->
           <div class="modal-body">
-            <!-- Empty State -->
-            <div v-if="filteredImages.length === 0" class="text-center py-5">
-              <p class="nav-text text-muted">No images available. Please upload images first.</p>
-            </div>
-
             <!-- Gallery Grid -->
-            <div v-else class="gallery-grid">
+            <div class="gallery-grid">
               <div
                 v-for="image in filteredImages"
                 :key="image.id"
@@ -251,7 +264,7 @@
             <button type="button" class="btn btn-outline-secondary" @click="closeGeneratedModal">
               Close
             </button>
-            <button type="button" class="btn btn-primary" disabled>
+            <button type="button" class="btn btn-primary" @click="downloadGeneratedImage">
               <i class="bi bi-download me-2"></i>Download
             </button>
           </div>
@@ -443,6 +456,18 @@ export default {
     },
     closeGeneratedModal() {
       this.showGeneratedModal = false
+    },
+    downloadGeneratedImage() {
+      if (!this.generatedImage) return
+
+      const link = document.createElement('a')
+      link.href = this.generatedImage
+      link.download = `generated-outfit-${Date.now()}.jpg`
+
+      document.body.appendChild(link)
+      link.click()
+
+      document.body.removeChild(link)
     },
   },
   mounted() {

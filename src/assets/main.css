@@ -472,8 +472,14 @@
   height: 40px;
 }
 
-.generate-btn:hover {
+.generate-btn:hover:not(:disabled) {
   background-color: #0095c7;
+}
+
+.generate-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Generate Button Active Animation */
@@ -552,7 +558,8 @@
 /* Modal Footer Buttons */
 .modal-footer .btn {
   font-family: var(--font-family-base);
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .modal-footer .btn-primary {
