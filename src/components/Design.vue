@@ -439,6 +439,7 @@ export default {
 
         if (result.success) {
           this.generatedImage = `data:image/jpeg;base64,${result.data.image_base64}`
+          this.userStore.addPreviewGeneration(result.data)
         } else {
           alert(`Generation failed: ${result.error || 'Unknown error'}`)
         }

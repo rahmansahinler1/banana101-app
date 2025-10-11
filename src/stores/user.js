@@ -6,6 +6,7 @@ export default defineStore('user', {
     userLoggedIn: false,
     userCred: null,
     previewImages: { yourself: [], clothing: [] },
+    previewGenerations: [],
   }),
   getters: {
     imageCounts(state) {
@@ -57,6 +58,16 @@ export default defineStore('user', {
       this.previewImages[category] = this.previewImages[category].filter(
         (img) => img.id !== imageId,
       )
+    },
+    addPreviewGeneration(imageData) {
+      this.previewGenerations.push({
+        id: imageData.image_id,
+        base64: `data:image/jpeg;base64,${imageData.preview_base64}`,
+        created_at: imageData.created_at,
+      })
+    },
+    removePreviewGeneration(imageId) {
+      this.previewGenerations = this.previewGenerations.filter((img) => img.id !== imageId)
     },
   },
 })
