@@ -189,6 +189,36 @@
   background-color: rgba(93, 93, 93, 0.1);
 }
 
+.profile-page-title {
+  font-family: var(--font-family-base);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-header {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.profile-text {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-text-small {
+  font-family: var(--font-family-base);
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.profile-btn {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 400;
+}
+
 /* ================================
    App Specific Styles
 ================================ */
