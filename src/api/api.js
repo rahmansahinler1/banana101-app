@@ -335,3 +335,36 @@ export const generateImage = async function (userId, yourselfImageId, clothingIm
     }
   }
 }
+
+export const submitFeedback = async function (userId, message) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/submit_feedback`, {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        message: message,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      const errorMessage = errorData.detail || `HTTP error! status: ${response.status}`
+      throw new Error(errorMessage)
+    }
+
+    const data = await response.json()
+    return {
+      success: true,
+      data: data,
+    }
+  } catch (error) {
+    console.error('Failed to submit feedback:', error)
+    return {
+      success: false,
+      error: error.message,
+    }
+  }
+}

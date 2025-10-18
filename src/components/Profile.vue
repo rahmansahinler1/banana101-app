@@ -107,13 +107,32 @@
             rows="3"
             placeholder="Anything you want to share?"
             maxlength="150"
+            :disabled="isSendingFeedback"
           ></textarea>
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <div></div>
+            <div>
+              <!-- Success Message -->
+              <small v-if="feedbackStatus === 'success'" class="nav-text-small text-success">
+                <i class="bi bi-check-circle me-1"></i>{{ feedbackMessage }}
+              </small>
+              <!-- Error Message -->
+              <small v-else-if="feedbackStatus === 'error'" class="nav-text-small text-danger">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ feedbackMessage }}
+              </small>
+            </div>
             <small class="nav-text-small text-muted">{{ feedbackText.length }}/150</small>
           </div>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-secondary btn-sm profile-btn">Send</button>
+            <button
+              class="btn btn-outline-secondary btn-sm profile-btn"
+              :disabled="!canSendFeedback"
+              @click="sendFeedback"
+            >
+              <span v-if="isSendingFeedback">
+                <span class="spinner-border spinner-border-sm me-1"></span>Sending...
+              </span>
+              <span v-else>Send</span>
+            </button>
           </div>
         </div>
       </div>
@@ -124,12 +143,16 @@
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
+import { submitFeedback } from '@/api/api'
 
 export default {
   name: 'Profile',
   data() {
     return {
       feedbackText: '',
+      isSendingFeedback: false,
+      feedbackStatus: null,
+      feedbackMessage: '',
     }
   },
   computed: {
@@ -151,6 +174,54 @@ export default {
     },
     isPremium() {
       return this.userCred.type === 'premium'
+    },
+    canSendFeedback() {
+      return this.feedbackText.trim().length > 0 && !this.isSendingFeedback
+    },
+  },
+  methods: {
+    async sendFeedback() {
+      if (!this.canSendFeedback) return
+
+      this.isSendingFeedback = true
+      this.feedbackStatus = null
+      this.feedbackMessage = ''
+
+      try {
+        const userId = window.APP_CONFIG.userId
+        const result = await submitFeedback(userId, this.feedbackText)
+
+        if (result.success) {
+          this.feedbackStatus = 'success'
+          this.feedbackMessage = 'Thank you for your feedback!'
+          this.feedbackText = ''
+
+          // Clear success message after 3 seconds
+          setTimeout(() => {
+            this.feedbackStatus = null
+            this.feedbackMessage = ''
+          }, 3000)
+        } else {
+          this.feedbackStatus = 'error'
+          this.feedbackMessage = result.error || 'Failed to send feedback'
+
+          // Clear error message after 5 seconds
+          setTimeout(() => {
+            this.feedbackStatus = null
+            this.feedbackMessage = ''
+          }, 5000)
+        }
+      } catch (error) {
+        this.feedbackStatus = 'error'
+        this.feedbackMessage = 'Network error. Please try again.'
+
+        setTimeout(() => {
+          this.feedbackStatus = null
+          this.feedbackMessage = ''
+        }, 5000)
+      } finally {
+        this.isSendingFeedback = false
+      }
     },
   },
 }
