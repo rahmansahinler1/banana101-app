@@ -219,6 +219,31 @@
   font-weight: 400;
 }
 
+.upgrade-btn {
+  background-color: #00b7ed;
+  color: white;
+  border: 1px solid #00b7ed;
+  animation: pulse-upgrade 2s ease-in-out infinite;
+}
+
+.upgrade-btn:hover {
+  background-color: #0095c7;
+  border-color: #0095c7;
+  color: white;
+  animation: none;
+}
+
+@keyframes pulse-upgrade {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 183, 237, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(0, 183, 237, 0);
+  }
+}
+
 /* ================================
    App Specific Styles
 ================================ */
