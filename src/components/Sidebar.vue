@@ -40,34 +40,64 @@
     </div>
     <!-- Profile Section -->
     <div class="profile-section">
+      <!-- Upgrade Banner for Trial Users -->
+      <a v-if="!isPremium" href="#upgrade" class="upgrade-banner-link d-flex align-items-center w-100 mb-2">
+        <i class="bi bi-stars me-2"></i>
+        <span class="flex-grow-1">Upgrade your plan</span>
+        <i class="bi bi-arrow-right"></i>
+      </a>
+
       <div class="dropdown">
         <button
           type="button"
           class="profile-button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
+          @click="toggleDropdown"
         >
-          <i class="bi bi-person-circle fs-4 me-3" style="color: #5d5d5d"></i>
-          <span class="profile-name">Ebru Saki</span>
-          <i class="bi bi-chevron-down ms-auto" style="color: #5d5d5d; font-size: 0.9rem"></i>
+          <div class="d-flex align-items-center w-100">
+            <div class="profile-avatar me-2" v-if="userCred.pictureUrl">
+              <img
+                :src="userCred.pictureUrl"
+                alt="Profile"
+                class="rounded-circle"
+                style="width: 40px; height: 40px; object-fit: cover"
+              />
+            </div>
+            <div class="profile-avatar-initials me-2" v-else>
+              <span>{{ userInitials }}</span>
+            </div>
+            <div class="flex-grow-1 text-start">
+              <div class="profile-name">{{ userCred.name }} {{ userCred.surname }}</div>
+              <div class="profile-plan-badge">{{ isPremium ? 'Premium plan' : 'Trial plan' }}</div>
+            </div>
+            <i
+              :class="isDropdownOpen ? 'bi bi-chevron-up' : 'bi bi-chevron-down'"
+              style="color: #5d5d5d; font-size: 0.9rem"
+            ></i>
+          </div>
         </button>
-        <ul class="dropdown-menu dropdown-menu-up">
+        <ul class="dropdown-menu dropdown-menu-up w-100">
+          <li class="dropdown-header">
+            <div class="nav-text-small text-muted">{{ userCred.email }}</div>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
           <li>
-            <a class="dropdown-item nav-item" href="#profile">
-              <i class="bi bi-person nav-icon"></i>
-              <span class="nav-text">Profile</span>
+            <router-link to="/profile" class="dropdown-item d-flex align-items-center">
+              <i class="bi bi-person-vcard me-2" style="font-size: 1rem; color: #5d5d5d"></i>
+              <span class="nav-text" style="color: #5d5d5d">Profile</span>
+            </router-link>
+          </li>
+          <li v-if="!isPremium">
+            <a class="dropdown-item d-flex align-items-center" href="#upgrade">
+              <i class="bi bi-stars me-2" style="font-size: 1rem; color: #5d5d5d"></i>
+              <span class="nav-text" style="color: #5d5d5d">Upgrade premium</span>
             </a>
           </li>
           <li>
-            <a class="dropdown-item nav-item" href="#settings">
-              <i class="bi bi-gear nav-icon"></i>
-              <span class="nav-text">Settings</span>
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item nav-item" href="#logout">
-              <i class="bi bi-box-arrow-right nav-icon"></i>
-              <span class="nav-text">Sign Out</span>
+            <a class="dropdown-item d-flex align-items-center" href="#logout">
+              <i class="bi bi-box-arrow-right me-2" style="font-size: 1rem; color: #5d5d5d"></i>
+              <span class="nav-text" style="color: #5d5d5d">Log out</span>
             </a>
           </li>
         </ul>
@@ -76,6 +106,49 @@
   </div>
 </template>
 
-<script></script>
+<script>
+import useUserStore from '@/stores/user'
+import { mapStores } from 'pinia'
+
+export default {
+  name: 'Sidebar',
+  data() {
+    return {
+      isDropdownOpen: false
+    }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+    userCred() {
+      return this.userStore?.userCred || { name: '', surname: '', email: '', pictureUrl: '' }
+    },
+    isPremium() {
+      return this.userStore?.userCred?.type === 'premium'
+    },
+    userInitials() {
+      const firstName = this.userCred.name || ''
+      const lastName = this.userCred.surname || ''
+      return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+    }
+  },
+  methods: {
+    toggleDropdown() {
+      this.isDropdownOpen = !this.isDropdownOpen
+    }
+  },
+  mounted() {
+    // Listen for Bootstrap dropdown events to sync state
+    const dropdownButton = this.$el.querySelector('[data-bs-toggle="dropdown"]')
+    if (dropdownButton) {
+      dropdownButton.addEventListener('shown.bs.dropdown', () => {
+        this.isDropdownOpen = true
+      })
+      dropdownButton.addEventListener('hidden.bs.dropdown', () => {
+        this.isDropdownOpen = false
+      })
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped></style>
