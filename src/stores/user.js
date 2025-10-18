@@ -93,5 +93,8 @@ export default defineStore('user', {
     updateUploadsLeft(newValue) {
       this.userLimits.uploadsLeft = newValue
     },
+    updateGenerationsLeft(newValue) {
+      this.userLimits.generationsLeft = newValue
+    },
   },
 })

@@ -119,8 +119,36 @@
           :class="{ clickable: generatedImage }"
           @click="generatedImage && openGeneratedImageModal()"
         >
+          <!-- Error State -->
+          <div v-if="generationError" class="card-error-overlay">
+            <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #333"></i>
+            <p class="mb-0 fw-bold" style="color: #333; font-family: var(--font-family-base)">
+              {{ generationError }}
+            </p>
+            <div class="d-flex gap-2 mt-2">
+              <button
+                class="btn btn-sm btn-outline-primary profile-go-btn"
+                style="
+                  font-family: var(--font-family-base);
+                  border-color: #00b7ed;
+                  color: #00b7ed;
+                "
+                @click="goToProfile"
+              >
+                <i class="bi bi-person-circle me-1"></i>Go to Profile
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                style="font-family: var(--font-family-base)"
+                @click="generationError = null"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+
           <!-- Generating State -->
-          <div v-if="isGenerating" class="card-loading-overlay">
+          <div v-else-if="isGenerating" class="card-loading-overlay">
             <div class="spinner-border text-primary mb-2" role="status"></div>
           </div>
 
@@ -159,7 +187,7 @@
           @click="generateImage"
         >
           <span>Generate</span>
-          <span><i class="bi bi-magic"></i> 20</span>
+          <span><i class="bi bi-magic"></i> {{ userStore.userLimits.generationsLeft || 0 }}</span>
         </button>
       </div>
     </div>
@@ -273,6 +301,49 @@
     </div>
     <!-- Generated Modal Backdrop -->
     <div v-if="showGeneratedModal" class="modal-backdrop fade show"></div>
+
+    <!-- Error Popup Modal -->
+    <div
+      class="modal fade"
+      :class="{ show: showErrorPopup, 'd-block': showErrorPopup }"
+      tabindex="-1"
+      v-if="showErrorPopup"
+      @click.self="showErrorPopup = false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Modal Body -->
+          <div class="modal-body text-center py-4">
+            <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #333"></i>
+            <p class="mb-0 fw-bold mt-3" style="color: #333; font-family: var(--font-family-base)">
+              {{ errorMessage }}
+            </p>
+            <div class="d-flex gap-2 mt-3 justify-content-center">
+              <button
+                class="btn btn-sm btn-outline-primary profile-go-btn"
+                style="
+                  font-family: var(--font-family-base);
+                  border-color: #00b7ed;
+                  color: #00b7ed;
+                "
+                @click="goToProfile"
+              >
+                <i class="bi bi-person-circle me-1"></i>Go to Profile
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                style="font-family: var(--font-family-base)"
+                @click="showErrorPopup = false"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Error Popup Backdrop -->
+    <div v-if="showErrorPopup" class="modal-backdrop fade show"></div>
   </div>
 </template>
 
@@ -311,6 +382,9 @@ export default {
       showGeneratedModal: false,
       generatedImage: null,
       isGenerating: false,
+      generationError: null,
+      showErrorPopup: false,
+      errorMessage: '',
     }
   },
   computed: {
@@ -427,7 +501,15 @@ export default {
     async generateImage() {
       if (!this.selections.yourself || !this.selections.clothing) return
 
+      // Check if user has generation credits
+      if (this.userStore.userLimits.generationsLeft <= 0) {
+        this.showErrorPopup = true
+        this.errorMessage = 'No generation credits left'
+        return
+      }
+
       this.isGenerating = true
+      this.generationError = null
 
       try {
         const userId = window.APP_CONFIG.userId
@@ -440,11 +522,14 @@ export default {
         if (result.success) {
           this.generatedImage = `data:image/jpeg;base64,${result.data.image_base64}`
           this.userStore.addPreviewGeneration(result.data)
+          // Update generations left in store
+          this.userStore.updateGenerationsLeft(result.data.generations_left)
         } else {
-          alert(`Generation failed: ${result.error || 'Unknown error'}`)
+          // Show error in result card
+          this.generationError = result.error || 'Generation failed. Please try again.'
         }
       } catch (error) {
-        alert(`Generation error: ${error.message}`)
+        this.generationError = error.message || 'Generation error. Please try again.'
       } finally {
         this.isGenerating = false
       }
@@ -468,6 +553,11 @@ export default {
       link.click()
 
       document.body.removeChild(link)
+    },
+    goToProfile() {
+      this.showErrorPopup = false
+      this.generationError = null
+      this.$router.push('/profile')
     },
   },
   mounted() {

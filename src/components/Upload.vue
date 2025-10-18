@@ -23,7 +23,7 @@
               @dragover.prevent
               @drop.prevent="handleDrop"
             >
-              <i class="bi bi-bag-plus" style="font-size: 3rem; color: #5d5d5d"></i>
+              <i class="bi bi-cloud-upload-fill" style="font-size: 3rem; color: #5d5d5d"></i>
               <h5>Drag and drop your picture in here</h5>
               <p class="nav-text text-muted">or click to browse files</p>
               <button class="btn btn-outline-primary">Browse Files</button>
@@ -47,12 +47,26 @@
                 <!-- Error State -->
                 <div v-if="uploadStatus === 'error'" class="upload-feedback">
                   <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #333"></i>
-                  <p class="mb-0 fw-bold" style="color: #333; font-family: var(--font-family-base)">{{ uploadMessage }}</p>
+                  <p class="mb-0 fw-bold" style="color: #333; font-family: var(--font-family-base)">
+                    {{ uploadMessage }}
+                  </p>
                   <div class="d-flex gap-2 mt-2">
-                    <button class="btn btn-sm btn-outline-primary profile-go-btn" style="font-family: var(--font-family-base); border-color: #00b7ed; color: #00b7ed" @click="goToProfile">
+                    <button
+                      class="btn btn-sm btn-outline-primary profile-go-btn"
+                      style="
+                        font-family: var(--font-family-base);
+                        border-color: #00b7ed;
+                        color: #00b7ed;
+                      "
+                      @click="goToProfile"
+                    >
                       <i class="bi bi-person-circle me-1"></i>Go to Profile
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" style="font-family: var(--font-family-base)" @click="uploadStatus = null">
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      style="font-family: var(--font-family-base)"
+                      @click="uploadStatus = null"
+                    >
                       Dismiss
                     </button>
                   </div>

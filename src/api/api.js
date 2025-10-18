@@ -317,7 +317,9 @@ export const generateImage = async function (userId, yourselfImageId, clothingIm
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      const errorData = await response.json().catch(() => ({}))
+      const errorMessage = errorData.detail || `HTTP error! status: ${response.status}`
+      throw new Error(errorMessage)
     }
 
     const data = await response.json()
@@ -326,7 +328,7 @@ export const generateImage = async function (userId, yourselfImageId, clothingIm
       data: data,
     }
   } catch (error) {
-    console.error('Failed to fetch full image:', error)
+    console.error('Failed to generate image:', error)
     return {
       success: false,
       error: error.message,
