@@ -4,7 +4,8 @@ import { getUser, getPreviewImages } from '@/api/api'
 export default defineStore('user', {
   state: () => ({
     userLoggedIn: false,
-    userCred: null,
+    userCred: { name: '', surname: '', gender: '', email: '' },
+    userLimits: { uploadsLeft: null, generationsLeft: null },
     previewImages: { yourself: [], clothing: [] },
     previewGenerations: [],
   }),
@@ -23,7 +24,12 @@ export default defineStore('user', {
         const user_fetch = await getUser(userId)
         if (user_fetch.success) {
           this.userLoggedIn = true
-          this.userCred = user_fetch.data.user_info
+          this.userCred.name = user_fetch.data.user_info['name']
+          this.userCred.surname = user_fetch.data.user_info['surname']
+          this.userCred.gender = user_fetch.data.user_info['gender']
+          this.userCred.email = user_fetch.data.user_info['email']
+          this.userLimits.uploadsLeft = user_fetch.data.user_info['uploads_left']
+          this.userLimits.generationsLeft = user_fetch.data.user_info['generations_left']
         }
 
         const preview_fetch = await getPreviewImages(userId)
