@@ -753,3 +753,10 @@
 .table td {
   font-size: 0.9rem;
 }
+
+/* Upload Profile Go Button Hover */
+.profile-go-btn:hover {
+  background-color: #00b7ed !important;
+  color: white !important;
+  border-color: #00b7ed !important;
+}

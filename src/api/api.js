@@ -160,7 +160,10 @@ export const uploadImage = async function (userId, category, imageBytes) {
     })
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      // Try to extract error message from response
+      const errorData = await response.json().catch(() => ({}))
+      const errorMessage = errorData.detail || `HTTP error! status: ${response.status}`
+      throw new Error(errorMessage)
     }
 
     const data = await response.json()

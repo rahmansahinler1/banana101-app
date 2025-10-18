@@ -138,15 +138,17 @@ export default {
   },
   mounted() {
     // Listen for Bootstrap dropdown events to sync state
-    const dropdownButton = this.$el.querySelector('[data-bs-toggle="dropdown"]')
-    if (dropdownButton) {
-      dropdownButton.addEventListener('shown.bs.dropdown', () => {
-        this.isDropdownOpen = true
-      })
-      dropdownButton.addEventListener('hidden.bs.dropdown', () => {
-        this.isDropdownOpen = false
-      })
-    }
+    this.$nextTick(() => {
+      const dropdownButton = this.$el?.querySelector?.('[data-bs-toggle="dropdown"]')
+      if (dropdownButton) {
+        dropdownButton.addEventListener('shown.bs.dropdown', () => {
+          this.isDropdownOpen = true
+        })
+        dropdownButton.addEventListener('hidden.bs.dropdown', () => {
+          this.isDropdownOpen = false
+        })
+      }
+    })
   }
 }
 </script>

@@ -8,6 +8,14 @@
         <div class="card h-100" style="min-height: 85vh">
           <div class="card-body d-flex flex-column">
             <h3 class="card-title mb-3">Selection</h3>
+            <!-- Hidden file input - always in DOM -->
+            <input
+              ref="fileInput"
+              type="file"
+              class="d-none"
+              accept="image/*"
+              @change="handleFileSelect"
+            />
             <div
               v-if="!hasSelection"
               class="upload-dropzone flex-grow-1 justify-content-center"
@@ -19,13 +27,6 @@
               <h5>Drag and drop your picture in here</h5>
               <p class="nav-text text-muted">or click to browse files</p>
               <button class="btn btn-outline-primary">Browse Files</button>
-              <input
-                ref="fileInput"
-                type="file"
-                class="d-none"
-                accept="image"
-                @change="handleFileSelect"
-              />
             </div>
             <div v-else class="upload-dropzone mb-2 position-relative">
               <img :src="previewUrl" alt="Selected image" class="preview-image" />
@@ -44,12 +45,17 @@
                 </div>
 
                 <!-- Error State -->
-                <div v-if="uploadStatus === 'error'" class="upload-feedback text-danger">
-                  <i class="bi bi-x-circle" style="font-size: 3rem"></i>
-                  <p class="mb-0 fw-bold">{{ uploadMessage }}</p>
-                  <button class="btn btn-sm btn-outline-danger mt-2" @click="uploadStatus = null">
-                    Dismiss
-                  </button>
+                <div v-if="uploadStatus === 'error'" class="upload-feedback">
+                  <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #333"></i>
+                  <p class="mb-0 fw-bold" style="color: #333; font-family: var(--font-family-base)">{{ uploadMessage }}</p>
+                  <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-sm btn-outline-primary profile-go-btn" style="font-family: var(--font-family-base); border-color: #00b7ed; color: #00b7ed" @click="goToProfile">
+                      <i class="bi bi-person-circle me-1"></i>Go to Profile
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" style="font-family: var(--font-family-base)" @click="uploadStatus = null">
+                      Dismiss
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -211,6 +217,14 @@ export default {
         alert('Please select picture and category')
         return
       }
+
+      // Check uploads
+      if (this.userStore.userLimits.uploadsLeft <= 0) {
+        this.uploadStatus = 'error'
+        this.uploadMessage = 'No upload credits left'
+        return
+      }
+
       this.uploadStatus = 'uploading'
       this.uploadMessage = ''
       this.isUploading = true
@@ -222,14 +236,20 @@ export default {
 
         if (result.success) {
           this.uploadStatus = 'success'
-          this.uploadMessage = 'Upload Sucessful'
+          this.uploadMessage = 'Upload Successful'
           this.userStore.addPreviewImage(this.selectedCategory, result.data)
+          this.userStore.updateUploadsLeft(result.data.uploads_left)
           setTimeout(() => {
             this.removeFile()
           }, 2000)
         } else {
           this.uploadStatus = 'error'
-          this.uploadMessage = `Upload Failed: ${result.error}`
+          // Check if it's a credit error
+          if (result.error.includes('Insufficient') || result.error.includes('credits')) {
+            this.uploadMessage = 'No upload credits remaining. Please upgrade to premium.'
+          } else {
+            this.uploadMessage = `Upload Failed: ${result.error}`
+          }
         }
       } catch (error) {
         this.uploadStatus = 'error'
@@ -258,6 +278,9 @@ export default {
       this.selectedCategory = null
       this.uploadStatus = null
       this.uploadMessage = ''
+    },
+    goToProfile() {
+      this.$router.push('/profile')
     },
   },
 }

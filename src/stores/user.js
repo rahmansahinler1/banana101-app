@@ -90,5 +90,8 @@ export default defineStore('user', {
     removePreviewGeneration(imageId) {
       this.previewGenerations = this.previewGenerations.filter((img) => img.id !== imageId)
     },
+    updateUploadsLeft(newValue) {
+      this.userLimits.uploadsLeft = newValue
+    },
   },
 })
