@@ -7,9 +7,7 @@ import useUserStore from '@/stores/user'
 
 function getAuthToken() {
   const cookieMatch = document.cookie.match(/authToken=([^;]+)/)
-  if (cookieMatch) return cookieMatch[1]
-
-  return localStorage.getItem('authToken')
+  return cookieMatch ? cookieMatch[1] : null
 }
 
 function getUserIdFromToken(token) {

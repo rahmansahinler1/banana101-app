@@ -139,8 +139,6 @@ export default {
       const domain = import.meta.env.VITE_COOKIE_DOMAIN
       document.cookie = `authToken=; domain=${domain}; path=/; max-age=0`
 
-      localStorage.removeItem('authToken')
-
       window.location.href = import.meta.env.VITE_WEBSITE_URL
     }
   },
