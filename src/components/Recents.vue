@@ -216,8 +216,8 @@ export default {
         const result = await deleteGeneration(imageId)
 
         if (result.success) {
-          // Remove from store
           this.userStore.removePreviewGeneration(imageId)
+          this.userStore.updateRecentsLeft(result.data.recents_left)
           this.deleteConfirmId = null
         } else {
           alert('Failed to delete image')
