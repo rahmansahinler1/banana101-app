@@ -128,11 +128,7 @@
             <div class="d-flex gap-2 mt-2">
               <button
                 class="btn btn-sm btn-outline-primary profile-go-btn"
-                style="
-                  font-family: var(--font-family-base);
-                  border-color: #00b7ed;
-                  color: #00b7ed;
-                "
+                style="font-family: var(--font-family-base); border-color: #00b7ed; color: #00b7ed"
                 @click="goToProfile"
               >
                 <i class="bi bi-person-circle me-1"></i>Go to Profile
@@ -321,11 +317,7 @@
             <div class="d-flex gap-2 mt-3 justify-content-center">
               <button
                 class="btn btn-sm btn-outline-primary profile-go-btn"
-                style="
-                  font-family: var(--font-family-base);
-                  border-color: #00b7ed;
-                  color: #00b7ed;
-                "
+                style="font-family: var(--font-family-base); border-color: #00b7ed; color: #00b7ed"
                 @click="goToProfile"
               >
                 <i class="bi bi-person-circle me-1"></i>Go to Profile
@@ -441,7 +433,7 @@ export default {
       this.loadingCards[category] = true
 
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await getFullImage(userId, selectedId)
 
         // Check if this is still the latest request (race condition protection)
@@ -512,7 +504,7 @@ export default {
       this.generationError = null
 
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await generateImage(
           userId,
           this.selections.yourself.id,

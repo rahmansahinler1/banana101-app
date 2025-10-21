@@ -5,15 +5,40 @@ import App from './App.vue'
 import router from './router'
 import useUserStore from '@/stores/user'
 
-// Initialize Application
-const app = createApp(App)
-app.use(createPinia())
-app.use(router)
+function getAuthToken() {
+  const cookieMatch = document.cookie.match(/authToken=([^;]+)/)
+  if (cookieMatch) return cookieMatch[1]
 
-// Initialize user data
-const userId = window.APP_CONFIG.userId
-const userStore = useUserStore()
-await userStore.initialize(userId)
+  return localStorage.getItem('authToken')
+}
 
-// Start the application
-app.mount('#app')
+function getUserIdFromToken(token) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.user_id
+  } catch (error) {
+    console.error('Invalid token')
+    return null
+  }
+}
+
+const token = getAuthToken()
+
+if (!token) {
+  window.location.href = import.meta.env.VITE_WEBSITE_URL
+} else {
+  const userId = getUserIdFromToken(token)
+
+  if (!userId) {
+    window.location.href = import.meta.env.VITE_WEBSITE_URL
+  } else {
+    const app = createApp(App)
+    app.use(createPinia())
+    app.use(router)
+
+    const userStore = useUserStore()
+    await userStore.initialize(userId)
+
+    app.mount('#app')
+  }
+}

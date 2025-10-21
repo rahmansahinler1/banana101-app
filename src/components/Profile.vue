@@ -188,7 +188,7 @@ export default {
       this.feedbackMessage = ''
 
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await submitFeedback(userId, this.feedbackText)
 
         if (result.success) {

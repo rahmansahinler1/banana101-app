@@ -3,8 +3,16 @@ import { getUser, getPreviewImages } from '@/api/api'
 
 export default defineStore('user', {
   state: () => ({
+    userId: null,
     userLoggedIn: false,
-    userCred: { name: '', surname: '', gender: '', email: '', type: 'trial', pictureUrl: '', nextRenewalDate: null },
+    userCred: {
+      name: '',
+      surname: '',
+      email: '',
+      type: 'trial',
+      pictureUrl: '',
+      nextRenewalDate: null,
+    },
     userLimits: { uploadsLeft: null, generationsLeft: null },
     previewImages: { yourself: [], clothing: [] },
     previewGenerations: [],
@@ -20,13 +28,14 @@ export default defineStore('user', {
   },
   actions: {
     async initialize(userId) {
+      this.userId = userId
+
       try {
         const user_fetch = await getUser(userId)
         if (user_fetch.success) {
           this.userLoggedIn = true
           this.userCred.name = user_fetch.data.user_info['name']
           this.userCred.surname = user_fetch.data.user_info['surname']
-          this.userCred.gender = user_fetch.data.user_info['gender']
           this.userCred.email = user_fetch.data.user_info['email']
           this.userCred.type = user_fetch.data.user_info['type']
           this.userCred.pictureUrl = user_fetch.data.user_info['picture_url']

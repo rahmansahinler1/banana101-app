@@ -213,7 +213,7 @@ export default {
     },
     async deleteGeneration(imageId) {
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await deleteGeneration(userId, imageId)
 
         if (result.success) {
@@ -239,7 +239,7 @@ export default {
 
       // Update backend
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await updateFav(userId, generationId)
 
         if (!result.success) {
@@ -260,7 +260,7 @@ export default {
       this.fullGeneratedImage = null
 
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await getFullGeneratedImage(userId, generationId)
 
         if (result.success) {

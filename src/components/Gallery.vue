@@ -188,7 +188,7 @@ export default {
     },
     async deleteImage(imageId, category) {
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await deleteImage(userId, imageId)
 
         if (result.success) {
@@ -215,7 +215,7 @@ export default {
 
       // Update backend
       try {
-        const userId = window.APP_CONFIG.userId
+        const userId = this.userStore.userId
         const result = await updateImageFav(userId, image.id)
 
         if (!result.success) {
