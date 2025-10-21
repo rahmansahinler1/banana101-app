@@ -95,10 +95,10 @@
             </a>
           </li>
           <li>
-            <a class="dropdown-item d-flex align-items-center" href="#logout">
+            <button class="dropdown-item d-flex align-items-center" @click="handleLogout">
               <i class="bi bi-box-arrow-right me-2" style="font-size: 1rem; color: #5d5d5d"></i>
               <span class="nav-text" style="color: #5d5d5d">Log out</span>
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -134,6 +134,14 @@ export default {
   methods: {
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen
+    },
+    handleLogout() {
+      const domain = import.meta.env.VITE_COOKIE_DOMAIN
+      document.cookie = `authToken=; domain=${domain}; path=/; max-age=0`
+
+      localStorage.removeItem('authToken')
+
+      window.location.href = import.meta.env.VITE_WEBSITE_URL
     }
   },
   mounted() {
