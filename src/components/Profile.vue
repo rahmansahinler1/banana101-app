@@ -201,8 +201,7 @@ export default {
       this.feedbackMessage = ''
 
       try {
-        const userId = this.userStore.userId
-        const result = await submitFeedback(userId, this.feedbackText)
+        const result = await submitFeedback(this.feedbackText)
 
         if (result.success) {
           this.feedbackStatus = 'success'

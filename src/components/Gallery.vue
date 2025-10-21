@@ -188,12 +188,11 @@ export default {
     },
     async deleteImage(imageId, category) {
       try {
-        const userId = this.userStore.userId
-        const result = await deleteImage(userId, imageId)
+        const result = await deleteImage(imageId)
 
         if (result.success) {
-          // Remove from store
           this.userStore.removePreviewImage(category.toLowerCase(), imageId)
+          this.userStore.updateUploadsLeft(result.data.uploads_left)
           this.deleteConfirmId = null
         } else {
           alert('Failed to delete image')
@@ -215,8 +214,7 @@ export default {
 
       // Update backend
       try {
-        const userId = this.userStore.userId
-        const result = await updateImageFav(userId, image.id)
+        const result = await updateImageFav(image.id)
 
         if (!result.success) {
           // Revert on failure

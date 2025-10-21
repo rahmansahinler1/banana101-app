@@ -433,8 +433,7 @@ export default {
       this.loadingCards[category] = true
 
       try {
-        const userId = this.userStore.userId
-        const result = await getFullImage(userId, selectedId)
+        const result = await getFullImage(selectedId)
 
         // Check if this is still the latest request (race condition protection)
         if (this.pendingRequests[category] !== requestId) {
@@ -510,9 +509,7 @@ export default {
       this.generationError = null
 
       try {
-        const userId = this.userStore.userId
         const result = await generateImage(
-          userId,
           this.selections.yourself.id,
           this.selections.clothing.id,
         )

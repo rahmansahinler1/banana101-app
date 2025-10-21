@@ -1,4 +1,25 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api/v1'
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1`
+
+async function fetchWithAuth(url, options = {}) {
+  const defaultOptions = {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  }
+
+  const response = await fetch(url, { ...defaultOptions, ...options })
+
+  if (response.status === 401) {
+    const domain = import.meta.env.VITE_COOKIE_DOMAIN
+    document.cookie = `authToken=; domain=${domain}; path=/; max-age=0`
+    window.location.href = import.meta.env.VITE_WEBSITE_URL
+    throw new Error('Authentication required')
+  }
+
+  return response
+}
 
 export const healthCheck = async function () {
   try {
@@ -27,14 +48,10 @@ export const healthCheck = async function () {
   }
 }
 
-export const getUser = async function (userId) {
+export const getUser = async function () {
   try {
-    const response = await fetch(`${API_BASE_URL}/get_user`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/get_user`, {
       method: 'POST',
-      body: JSON.stringify({ user_id: userId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
 
     if (!response.ok) {
@@ -47,7 +64,7 @@ export const getUser = async function (userId) {
       data: data,
     }
   } catch (error) {
-    console.error('Health check failed:', error)
+    console.error('Failed to get user:', error)
     return {
       success: false,
       error: error.message,
@@ -55,14 +72,10 @@ export const getUser = async function (userId) {
   }
 }
 
-export const getPreviewImages = async function (userId) {
+export const getPreviewImages = async function () {
   try {
-    const response = await fetch(`${API_BASE_URL}/get_previews`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/get_previews`, {
       method: 'POST',
-      body: JSON.stringify({ user_id: userId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
 
     if (!response.ok) {
@@ -75,7 +88,7 @@ export const getPreviewImages = async function (userId) {
       data: data,
     }
   } catch (error) {
-    console.error('Health check failed:', error)
+    console.error('Failed to get preview images:', error)
     return {
       success: false,
       error: error.message,
@@ -83,17 +96,11 @@ export const getPreviewImages = async function (userId) {
   }
 }
 
-export const getFullImage = async function (userId, imageId) {
+export const getFullImage = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/get_full_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/get_full_image`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -114,17 +121,11 @@ export const getFullImage = async function (userId, imageId) {
   }
 }
 
-export const getFullGeneratedImage = async function (userId, imageId) {
+export const getFullGeneratedImage = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/get_full_generated_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/get_full_generated_image`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -145,22 +146,17 @@ export const getFullGeneratedImage = async function (userId, imageId) {
   }
 }
 
-export const uploadImage = async function (userId, category, imageBytes) {
+export const uploadImage = async function (category, imageBytes) {
   try {
-    const response = await fetch(`${API_BASE_URL}/upload_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/upload_image`, {
       method: 'POST',
       body: JSON.stringify({
-        user_id: userId,
         category: category,
         imageBytes: imageBytes,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
 
     if (!response.ok) {
-      // Try to extract error message from response
       const errorData = await response.json().catch(() => ({}))
       const errorMessage = errorData.detail || `HTTP error! status: ${response.status}`
       throw new Error(errorMessage)
@@ -172,7 +168,7 @@ export const uploadImage = async function (userId, category, imageBytes) {
       data: data,
     }
   } catch (error) {
-    console.error('Failed to upload file: ', error)
+    console.error('Failed to upload file:', error)
     return {
       success: false,
       error: error.message,
@@ -180,17 +176,11 @@ export const uploadImage = async function (userId, category, imageBytes) {
   }
 }
 
-export const updateFav = async function (userId, imageId) {
+export const updateFav = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/update_fav`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/update_fav`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -202,7 +192,7 @@ export const updateFav = async function (userId, imageId) {
       success: true,
     }
   } catch (error) {
-    console.error('Failed to update fav: ', error)
+    console.error('Failed to update fav:', error)
     return {
       success: false,
       error: error.message,
@@ -210,17 +200,11 @@ export const updateFav = async function (userId, imageId) {
   }
 }
 
-export const updateImageFav = async function (userId, imageId) {
+export const updateImageFav = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/update_image_fav`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/update_image_fav`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -232,7 +216,7 @@ export const updateImageFav = async function (userId, imageId) {
       success: true,
     }
   } catch (error) {
-    console.error('Failed to update image fav: ', error)
+    console.error('Failed to update image fav:', error)
     return {
       success: false,
       error: error.message,
@@ -240,17 +224,11 @@ export const updateImageFav = async function (userId, imageId) {
   }
 }
 
-export const deleteImage = async function (userId, imageId) {
+export const deleteImage = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/delete_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/delete_image`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -263,7 +241,7 @@ export const deleteImage = async function (userId, imageId) {
       data: data,
     }
   } catch (error) {
-    console.error('Failed to delete image: ', error)
+    console.error('Failed to delete image:', error)
     return {
       success: false,
       error: error.message,
@@ -271,17 +249,11 @@ export const deleteImage = async function (userId, imageId) {
   }
 }
 
-export const deleteGeneration = async function (userId, imageId) {
+export const deleteGeneration = async function (imageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/delete_generated_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/delete_generated_image`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        image_id: imageId,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ image_id: imageId }),
     })
 
     if (!response.ok) {
@@ -294,7 +266,7 @@ export const deleteGeneration = async function (userId, imageId) {
       data: data,
     }
   } catch (error) {
-    console.error('Failed to delete image: ', error)
+    console.error('Failed to delete generation:', error)
     return {
       success: false,
       error: error.message,
@@ -302,18 +274,14 @@ export const deleteGeneration = async function (userId, imageId) {
   }
 }
 
-export const generateImage = async function (userId, yourselfImageId, clothingImageId) {
+export const generateImage = async function (yourselfImageId, clothingImageId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/generate_image`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/generate_image`, {
       method: 'POST',
       body: JSON.stringify({
-        user_id: userId,
         yourself_image_id: yourselfImageId,
         clothing_image_id: clothingImageId,
       }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
 
     if (!response.ok) {
@@ -336,17 +304,11 @@ export const generateImage = async function (userId, yourselfImageId, clothingIm
   }
 }
 
-export const submitFeedback = async function (userId, message) {
+export const submitFeedback = async function (message) {
   try {
-    const response = await fetch(`${API_BASE_URL}/submit_feedback`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/submit_feedback`, {
       method: 'POST',
-      body: JSON.stringify({
-        user_id: userId,
-        message: message,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: JSON.stringify({ message: message }),
     })
 
     if (!response.ok) {

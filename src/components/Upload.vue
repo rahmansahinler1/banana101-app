@@ -245,8 +245,7 @@ export default {
       // Upload
       try {
         const fileBytes = await this.convertFile(this.selectedFile)
-        const userId = this.userStore.userId
-        const result = await uploadImage(userId, this.selectedCategory, fileBytes)
+        const result = await uploadImage(this.selectedCategory, fileBytes)
 
         if (result.success) {
           this.uploadStatus = 'success'

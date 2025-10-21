@@ -31,7 +31,7 @@ export default defineStore('user', {
       this.userId = userId
 
       try {
-        const user_fetch = await getUser(userId)
+        const user_fetch = await getUser()
         if (user_fetch.success) {
           this.userLoggedIn = true
           this.userCred.name = user_fetch.data.user_info['name']
@@ -45,7 +45,7 @@ export default defineStore('user', {
           this.userLimits.recentsLeft = user_fetch.data.user_info['recents_left']
         }
 
-        const preview_fetch = await getPreviewImages(userId)
+        const preview_fetch = await getPreviewImages()
         if (preview_fetch.success) {
           // Map and add data for images
           const image_previews = preview_fetch.data.image_previews
