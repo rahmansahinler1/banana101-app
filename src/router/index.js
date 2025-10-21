@@ -42,4 +42,15 @@ const router = createRouter({
   routes: routes,
 })
 
+router.beforeEach((to, from, next) => {
+  const cookieMatch = document.cookie.match(/authToken=([^;]+)/)
+
+  if (!cookieMatch) {
+    window.location.href = import.meta.env.VITE_WEBSITE_URL
+    return
+  }
+
+  next()
+})
+
 export default router
