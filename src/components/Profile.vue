@@ -71,7 +71,7 @@
       <div class="mb-4 pb-4 border-bottom">
         <div class="row g-3">
           <!-- Uploads Card -->
-          <div class="col-6">
+          <div class="col-4">
             <div class="border rounded p-3 d-flex align-items-center">
               <div class="me-3">
                 <i class="bi bi-cloud-upload-fill" style="font-size: 1.75rem; color: #00b7ed"></i>
@@ -83,8 +83,21 @@
             </div>
           </div>
 
+          <!-- Recents Storage Card -->
+          <div class="col-4">
+            <div class="border rounded p-3 d-flex align-items-center">
+              <div class="me-3">
+                <i class="bi bi-database-fill" style="font-size: 1.75rem; color: #00b7ed"></i>
+              </div>
+              <div>
+                <div class="nav-text fw-bold mb-0">{{ userLimits.recentsLeft }}</div>
+                <div class="nav-text-small text-muted">Recents left</div>
+              </div>
+            </div>
+          </div>
+
           <!-- Generations Card -->
-          <div class="col-6">
+          <div class="col-4">
             <div class="border rounded p-3 d-flex align-items-center">
               <div class="me-3">
                 <i class="bi bi-magic" style="font-size: 1.75rem; color: #00b7ed"></i>
@@ -170,7 +183,7 @@ export default {
       )
     },
     userLimits() {
-      return this.userStore?.userLimits || { uploadsLeft: 0, generationsLeft: 0 }
+      return this.userStore?.userLimits || { uploadsLeft: 0, generationsLeft: 0, recentsLeft: 0 }
     },
     isPremium() {
       return this.userCred.type === 'premium'

@@ -13,7 +13,7 @@ export default defineStore('user', {
       pictureUrl: '',
       nextRenewalDate: null,
     },
-    userLimits: { uploadsLeft: null, generationsLeft: null },
+    userLimits: { uploadsLeft: null, generationsLeft: null, recentsLeft: null },
     previewImages: { yourself: [], clothing: [] },
     previewGenerations: [],
   }),
@@ -42,6 +42,7 @@ export default defineStore('user', {
           this.userCred.nextRenewalDate = user_fetch.data.user_info['next_renewal_date']
           this.userLimits.uploadsLeft = user_fetch.data.user_info['uploads_left']
           this.userLimits.generationsLeft = user_fetch.data.user_info['generations_left']
+          this.userLimits.recentsLeft = user_fetch.data.user_info['recents_left']
         }
 
         const preview_fetch = await getPreviewImages(userId)
@@ -104,6 +105,9 @@ export default defineStore('user', {
     },
     updateGenerationsLeft(newValue) {
       this.userLimits.generationsLeft = newValue
+    },
+    updateRecentsLeft(newValue) {
+      this.userLimits.recentsLeft = newValue
     },
   },
 })

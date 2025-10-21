@@ -493,10 +493,16 @@ export default {
     async generateImage() {
       if (!this.selections.yourself || !this.selections.clothing) return
 
-      // Check if user has generation credits
       if (this.userStore.userLimits.generationsLeft <= 0) {
         this.showErrorPopup = true
         this.errorMessage = 'No generation credits left'
+        return
+      }
+
+      if (this.userStore.userLimits.recentsLeft <= 0) {
+        this.showErrorPopup = true
+        this.errorMessage =
+          'No recents storage left. You can delete some generations to get storage.'
         return
       }
 
@@ -514,10 +520,9 @@ export default {
         if (result.success) {
           this.generatedImage = `data:image/jpeg;base64,${result.data.image_base64}`
           this.userStore.addPreviewGeneration(result.data)
-          // Update generations left in store
           this.userStore.updateGenerationsLeft(result.data.generations_left)
+          this.userStore.updateRecentsLeft(result.data.recents_left)
         } else {
-          // Show error in result card
           this.generationError = result.error || 'Generation failed. Please try again.'
         }
       } catch (error) {
