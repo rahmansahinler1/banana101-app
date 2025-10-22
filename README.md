@@ -1,3 +1,3 @@
-# banana101-app
+# unmarble-app
 
-Sample application to test google's banana model
+Sample application for unmarble AI-powered virtual try-on

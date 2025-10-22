@@ -3,7 +3,7 @@
   <div class="app-sidebar d-flex flex-column">
     <div class="sidebar-header">
       <button type="button" class="logo-button hover-btn">
-        <span class="logo-text">Banana App</span>
+        <span class="logo-text">Unmarble</span>
       </button>
     </div>
     <!-- Navigation Sections -->
