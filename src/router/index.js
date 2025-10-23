@@ -7,10 +7,6 @@ import Panel5 from '@/views/Panel5.vue'
 
 const routes = [
   {
-    path: '/',
-    component: Panel1,
-  },
-  {
     name: 'Panel1',
     path: '/gallery',
     component: Panel1,
@@ -46,7 +42,7 @@ router.beforeEach((to, from, next) => {
   const cookieMatch = document.cookie.match(/authToken=([^;]+)/)
 
   if (!cookieMatch) {
-    window.location.href = import.meta.env.VITE_WEBSITE_URL
+    window.location.href = '/'
     return
   }
 
