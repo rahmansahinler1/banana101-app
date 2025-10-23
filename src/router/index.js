@@ -7,6 +7,10 @@ import Panel5 from '@/views/Panel5.vue'
 
 const routes = [
   {
+    path: '',
+    redirect: '/gallery',
+  },
+  {
     name: 'Panel1',
     path: '/gallery',
     component: Panel1,
@@ -34,7 +38,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/app/'),
   routes: routes,
 })
 

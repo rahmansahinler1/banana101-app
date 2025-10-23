@@ -41,7 +41,11 @@
     <!-- Profile Section -->
     <div class="profile-section">
       <!-- Upgrade Banner for Trial Users -->
-      <a v-if="!isPremium" href="#upgrade" class="upgrade-banner-link d-flex align-items-center w-100 mb-2">
+      <a
+        v-if="!isPremium"
+        href="#upgrade"
+        class="upgrade-banner-link d-flex align-items-center w-100 mb-2"
+      >
         <i class="bi bi-stars me-2"></i>
         <span class="flex-grow-1">Upgrade your plan</span>
         <i class="bi bi-arrow-right"></i>
@@ -114,7 +118,7 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      isDropdownOpen: false
+      isDropdownOpen: false,
     }
   },
   computed: {
@@ -129,7 +133,7 @@ export default {
       const firstName = this.userCred.name || ''
       const lastName = this.userCred.surname || ''
       return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
-    }
+    },
   },
   methods: {
     toggleDropdown() {
@@ -142,7 +146,7 @@ export default {
       localStorage.setItem('logout-event', Date.now().toString())
 
       window.location.href = import.meta.env.VITE_WEBSITE_URL
-    }
+    },
   },
   mounted() {
     // Listen for Bootstrap dropdown events to sync state
@@ -157,7 +161,7 @@ export default {
         })
       }
     })
-  }
+  },
 }
 </script>
 
