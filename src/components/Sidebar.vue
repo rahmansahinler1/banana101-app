@@ -2,7 +2,7 @@
   <!-- Sidebar -->
   <div class="app-sidebar d-flex flex-column">
     <div class="sidebar-header">
-      <button type="button" class="logo-button">
+      <button type="button" class="logo-button mt-3 mb-3">
         <img src="/assets/img/unmarble-text.svg" alt="Unmarble" class="logo-image" />
       </button>
     </div>
@@ -46,7 +46,7 @@
         href="#upgrade"
         class="upgrade-banner-link d-flex align-items-center w-100 mb-2"
       >
-        <i class="bi bi-stars me-2"></i>
+        <i class="bi bi-stars me-2" style="color: #00b7ed"></i>
         <span class="flex-grow-1">Upgrade your plan</span>
         <i class="bi bi-arrow-right"></i>
       </a>
