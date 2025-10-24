@@ -2,8 +2,8 @@
   <!-- Sidebar -->
   <div class="app-sidebar d-flex flex-column">
     <div class="sidebar-header">
-      <button type="button" class="logo-button hover-btn">
-        <span class="logo-text">Unmarble</span>
+      <button type="button" class="logo-button">
+        <img src="/assets/img/unmarble-text.svg" alt="Unmarble" class="logo-image" />
       </button>
     </div>
     <!-- Navigation Sections -->
