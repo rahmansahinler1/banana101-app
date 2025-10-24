@@ -109,6 +109,17 @@
                   </template>
                 </div>
               </div>
+              <!-- Create button -->
+              <div class="gallery-item">
+                <div class="gallery-image-wrapper">
+                  <div class="gallery-upload-content">
+                    <i
+                      class="bi bi-plus-circle-fill gallery-upload-icon"
+                      @click="this.$router.push('/design')"
+                    ></i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
