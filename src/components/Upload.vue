@@ -13,7 +13,7 @@
               ref="fileInput"
               type="file"
               class="d-none"
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png,image/webp,image/heic,image/heif"
               @change="handleFileSelect"
             />
             <div
@@ -129,7 +129,7 @@
                 First, select your picture from your device, then select your category, then upload
                 it if you like
               </li>
-              <li>Supported file formats: JPG, PNG, WEBP</li>
+              <li>Supported file formats: JPG, PNG, WEBP, HEIC</li>
               <li>Maximum file size is 5MB</li>
               <li>Use neutral backgrounds for your pictures</li>
               <li>Ensure clothing is visible</li>
@@ -161,6 +161,7 @@
 import { uploadImage } from '@/api/api'
 import { mapStores } from 'pinia'
 import useUserStore from '@/stores/user'
+import heic2any from 'heic2any'
 
 export default {
   name: 'Upload',
@@ -200,20 +201,43 @@ export default {
       this.processFile(file)
       event.target.value = ''
     },
-    processFile(file) {
+    async processFile(file) {
       if (!file) return
 
       const maxSize = 5 * 1024 * 1024
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+      const allowedTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+        'image/heic',
+        'image/heif',
+      ]
 
       if (!allowedTypes.includes(file.type)) {
-        alert('Please select a valid image file (JPG, PNG, WEBP)')
+        alert('Please select a valid image file (JPG, PNG, WEBP, HEIC)')
         return
       }
 
       if (file.size > maxSize) {
         alert('Please upload files smaller than 5MB')
         return
+      }
+
+      if (file.type === 'image/heic' || file.type === 'image/heif') {
+        try {
+          const convertedBlob = await heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 0.9,
+          })
+          file = new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpg'), {
+            type: 'image/jpeg',
+          })
+        } catch (error) {
+          alert('Failed to convert HEIC image. Please try a different format.')
+          return
+        }
       }
 
       if (this.previewUrl) {
