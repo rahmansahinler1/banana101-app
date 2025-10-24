@@ -556,9 +556,12 @@
 
 /* Design Page Styles */
 .selection-card {
+  --available-width: calc((100vw - 248px - 240px) / 3);
+  --card-width: clamp(320px, var(--available-width), 520px);
+
   position: relative;
-  width: 400px;
-  height: 500px; /* 4:5 aspect ratio (340 * 1.25 = 425) */
+  width: var(--card-width);
+  height: calc(var(--card-width) * 1.25);
   border: 3px dashed rgba(93, 93, 93, 0.3);
   border-radius: 1rem;
   background-color: rgba(93, 93, 93, 0.02);

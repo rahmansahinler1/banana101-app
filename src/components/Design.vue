@@ -2,7 +2,7 @@
   <div class="container-fluid h-100 d-flex flex-column">
     <h1 class="dashboard-title mb-3 text-center">Create Your Outfit</h1>
 
-    <div class="row h-100 align-items-center justify-content-center px-3 gx-3">
+    <div class="row h-100 align-items-center justify-content-center gx-3">
       <!-- Yourself Card -->
       <div class="col-auto">
         <h3 class="card-title mb-3 text-center"><i class="bi bi-person-fill me-2"></i>Yourself</h3>
@@ -509,10 +509,7 @@ export default {
       this.generationError = null
 
       try {
-        const result = await generateImage(
-          this.selections.yourself.id,
-          this.selections.clothing.id,
-        )
+        const result = await generateImage(this.selections.yourself.id, this.selections.clothing.id)
 
         if (result.success) {
           this.generatedImage = `data:image/jpeg;base64,${result.data.image_base64}`
