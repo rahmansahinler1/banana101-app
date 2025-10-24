@@ -183,6 +183,7 @@ export default {
       showImageModal: false,
       fullImage: null,
       loadingFullImage: false,
+      escapeKeyHandler: null,
     }
   },
   computed: {
@@ -281,6 +282,13 @@ export default {
       this.loadingFullImage = true
       this.fullImage = null
 
+      this.escapeKeyHandler = (event) => {
+        if (event.key === 'Escape') {
+          this.closeImageModal()
+        }
+      }
+      document.addEventListener('keydown', this.escapeKeyHandler)
+
       try {
         const result = await getFullImage(imageId)
 
@@ -288,12 +296,12 @@ export default {
           this.fullImage = `data:image/jpeg;base64,${result.data.image_base64}`
         } else {
           alert('Failed to load full image')
-          this.showImageModal = false
+          this.closeImageModal()
         }
       } catch (error) {
         console.error('Error loading full image:', error)
         alert('Error loading image')
-        this.showImageModal = false
+        this.closeImageModal()
       } finally {
         this.loadingFullImage = false
       }
@@ -301,6 +309,10 @@ export default {
     closeImageModal() {
       this.showImageModal = false
       this.fullImage = null
+      if (this.escapeKeyHandler) {
+        document.removeEventListener('keydown', this.escapeKeyHandler)
+        this.escapeKeyHandler = null
+      }
     },
     downloadImage() {
       if (!this.fullImage) return
@@ -312,6 +324,11 @@ export default {
       link.click()
       document.body.removeChild(link)
     },
+  },
+  beforeUnmount() {
+    if (this.escapeKeyHandler) {
+      document.removeEventListener('keydown', this.escapeKeyHandler)
+    }
   },
 }
 </script>
