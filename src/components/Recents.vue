@@ -57,12 +57,13 @@
                 v-for="generation in getGenerationPreviews"
                 :key="generation.id"
               >
-                <div class="gallery-image-wrapper" @click="openGeneratedImageModal(generation.id)" style="cursor: pointer;">
+                <div
+                  class="gallery-image-wrapper"
+                  @click="openGeneratedImageModal(generation.id)"
+                  style="cursor: pointer"
+                >
                   <!-- Like Button Badge -->
-                  <button
-                    class="gallery-like-badge"
-                    @click.stop="toggleLike(generation.id)"
-                  >
+                  <button class="gallery-like-badge" @click.stop="toggleLike(generation.id)">
                     <i
                       :class="generation.faved ? 'bi bi-heart-fill' : 'bi bi-heart'"
                       :style="{ color: generation.faved ? '#dc3545' : 'white' }"

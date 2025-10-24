@@ -53,7 +53,11 @@
             <div class="gallery-grid">
               <!-- Gallery items will go here -->
               <div class="gallery-item" v-for="image in getPreviewImages" :key="image.id">
-                <div class="gallery-image-wrapper">
+                <div
+                  class="gallery-image-wrapper"
+                  @click="openImageModal(image.id)"
+                  style="cursor: pointer"
+                >
                   <!-- Like Button Badge -->
                   <button class="gallery-like-badge" @click.stop="toggleImageFav(image)">
                     <i
@@ -116,13 +120,59 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="modal fade"
+      :class="{ show: showImageModal, 'd-block': showImageModal }"
+      tabindex="-1"
+      v-if="showImageModal"
+      @click.self="closeImageModal"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Full Image</h5>
+            <button type="button" class="btn-close" @click="closeImageModal"></button>
+          </div>
+
+          <div class="modal-body text-center">
+            <div v-if="loadingFullImage" class="py-5">
+              <div class="spinner-border text-primary mb-2" role="status"></div>
+              <p class="nav-text text-muted">Loading full image...</p>
+            </div>
+            <img
+              v-else-if="fullImage"
+              :src="fullImage"
+              alt="Full resolution image"
+              class="img-fluid"
+              style="max-height: 70vh"
+            />
+          </div>
+
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-outline-secondary" @click="closeImageModal">
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="downloadImage"
+              :disabled="!fullImage"
+            >
+              <i class="bi bi-download me-2"></i>Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="showImageModal" class="modal-backdrop fade show"></div>
   </div>
 </template>
 
 <script>
 import useUserStore from '@/stores/user'
 import { mapStores } from 'pinia'
-import { deleteImage, updateImageFav } from '@/api/api'
+import { deleteImage, updateImageFav, getFullImage } from '@/api/api'
 
 export default {
   name: 'Gallery',
@@ -130,6 +180,9 @@ export default {
     return {
       selectedFilter: 'all',
       deleteConfirmId: null,
+      showImageModal: false,
+      fullImage: null,
+      loadingFullImage: false,
     }
   },
   computed: {
@@ -203,30 +256,61 @@ export default {
       }
     },
     async toggleImageFav(image) {
-      // Find the image in store
       const category = image.category.toLowerCase()
       const imageInStore = this.userStore.previewImages[category].find((img) => img.id === image.id)
       if (!imageInStore) return
 
-      // Optimistic update - toggle immediately in UI
       const previousState = imageInStore.faved
       imageInStore.faved = !imageInStore.faved
 
-      // Update backend
       try {
         const result = await updateImageFav(image.id)
 
         if (!result.success) {
-          // Revert on failure
           imageInStore.faved = previousState
           alert('Failed to update favorite')
         }
       } catch (error) {
-        // Revert on error
         imageInStore.faved = previousState
         console.error('Error updating favorite:', error)
         alert('Error updating favorite')
       }
+    },
+    async openImageModal(imageId) {
+      this.showImageModal = true
+      this.loadingFullImage = true
+      this.fullImage = null
+
+      try {
+        const result = await getFullImage(imageId)
+
+        if (result.success) {
+          this.fullImage = `data:image/jpeg;base64,${result.data.image_base64}`
+        } else {
+          alert('Failed to load full image')
+          this.showImageModal = false
+        }
+      } catch (error) {
+        console.error('Error loading full image:', error)
+        alert('Error loading image')
+        this.showImageModal = false
+      } finally {
+        this.loadingFullImage = false
+      }
+    },
+    closeImageModal() {
+      this.showImageModal = false
+      this.fullImage = null
+    },
+    downloadImage() {
+      if (!this.fullImage) return
+
+      const link = document.createElement('a')
+      link.href = this.fullImage
+      link.download = `image-${Date.now()}.jpg`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     },
   },
 }
